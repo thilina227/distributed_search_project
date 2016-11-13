@@ -19,10 +19,10 @@ public class Main {
     }
 
     private static void startListeners() {
-        Listener tcpListener = new TcpListener();
+        Listener tcpListener = TcpListener.getInstance();
         tcpListener.initListener(bootstrapServerPort);
 
-        UdpListener udpListener = new UdpListener();
+        Listener udpListener = UdpListener.getInstance();
         udpListener.initListener(udpPort);
     }
 }

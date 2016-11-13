@@ -14,41 +14,60 @@ import java.net.Socket;
  */
 public class TcpListener extends Listener {
 
-    //TODO make singleton
-    //TODO run in a new thread
+    private static Listener instance;
+
+    //Singleton
+    private TcpListener() {
+    }
 
     @Override
     public void initListener(int port) {
-        System.out.println("Starting TCP Listener....");
-        //TODO use a thread pool to accept concurrent messages
+        System.out.println("Starting TCP Listener...");
+        Runnable serverTask = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ServerSocket serverSocket = new ServerSocket(port);
+                    while (true) {
+                        Socket connectionSocket = serverSocket.accept();
+                        BufferedReader inFromClient =
+                                new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
+                        DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
+                        String requestMessage = inFromClient.readLine();
 
-        String requestMessage;
-        ServerSocket welcomeSocket = null;
-        try {
-            welcomeSocket = new ServerSocket(port);
-            while (true) {
-                Socket connectionSocket = welcomeSocket.accept();
-                BufferedReader inFromClient =
-                        new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
-                DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
-                requestMessage = inFromClient.readLine();
+                        //TODO process in a thread pool
+                        String response = processMessage(requestMessage);
+                        outToClient.writeBytes(response);
 
-                String response = processMessage(requestMessage);
-                outToClient.writeBytes(response);
+                    }
 
+                    //TODO graceful shutdown
+                } catch (IOException e) {
+                    //TODO log
+                    e.printStackTrace();
+                }
             }
-
-            //TODO graceful shutdown
-        } catch (IOException e) {
-            //TODO log
-            e.printStackTrace();
-        }
-
+        };
+        Thread serverThread = new Thread(serverTask);
+        serverThread.start();
+        System.out.println("TCP Listener started!");
     }
 
     @Override
     public String processMessage(String message) {
         //TODO implement
         return "test";
+    }
+
+    /**
+     * Get current instance
+     *
+     * @return TcpListener instance
+     * */
+    public static Listener getInstance() {
+        if (instance == null) {
+            instance = new TcpListener();
+        }
+        return instance;
     }
 }

@@ -13,43 +13,54 @@ import java.net.SocketException;
  */
 public class UdpListener extends Listener {
 
-    //TODO make singleton
-    //TODO run in a new thread
+    private static Listener instance;
 
     private int port;
     private byte[] receiveData = new byte[1024];
     private byte[] sendData = new byte[1024];
 
+    //Singleton
+    private UdpListener() {
+    }
+
     @Override
     public void initListener(int port) {
-        System.out.println("Starting UDP Listener....");
+        System.out.println("Starting UDP Listener...");
 
-        //TODO use a thread pool to accept concurrent messages
-        try {
-            DatagramSocket datagramSocket = new DatagramSocket(port);
 
-            while (true) {
-                DatagramPacket datagramPacket = new DatagramPacket(receiveData, receiveData.length);
-                datagramSocket.receive(datagramPacket);
-                String receivedText = new String(datagramPacket.getData());
+        Runnable serverTask = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    DatagramSocket datagramSocket = new DatagramSocket(port);
 
-                InetAddress senderAddress = datagramPacket.getAddress();
-                int senderPort = datagramPacket.getPort();
+                    while (true) {
+                        DatagramPacket datagramPacket = new DatagramPacket(receiveData, receiveData.length);
+                        datagramSocket.receive(datagramPacket);
+                        String receivedText = new String(datagramPacket.getData());
 
-                String response = processMessage(receivedText);
-                DatagramPacket sendPacket =
-                        new DatagramPacket(sendData, sendData.length, senderAddress, senderPort);
-                sendPacket.setData(response.getBytes());
-                datagramSocket.send(sendPacket);
+                        InetAddress senderAddress = datagramPacket.getAddress();
+                        int senderPort = datagramPacket.getPort();
+
+                        //TODO use a thread pool to accept concurrent messages
+                        String response = processMessage(receivedText);
+                        DatagramPacket sendPacket =
+                                new DatagramPacket(sendData, sendData.length, senderAddress, senderPort);
+                        sendPacket.setData(response.getBytes());
+                        datagramSocket.send(sendPacket);
+                    }
+                    //TODO graceful shutdown
+                } catch (SocketException e) {
+                    //TODO log
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-            //TODO graceful shutdown
-        } catch (SocketException e) {
-            //TODO log
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        };
+        Thread serverThread = new Thread(serverTask);
+        serverThread.start();
+        System.out.println("UDP Listener started!");
     }
 
     @Override
@@ -57,6 +68,19 @@ public class UdpListener extends Listener {
         //TODO implement
         return "test";
     }
+
+    /**
+     * Get current instance
+     *
+     * @return UdpListener instance
+     * */
+    public static Listener getInstance() {
+        if (instance == null) {
+            instance = new UdpListener();
+        }
+        return instance;
+    }
+
 
     public int getPort() {
         return port;
