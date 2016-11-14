@@ -1,10 +1,13 @@
 package distributed.computing.listner;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -14,6 +17,9 @@ import java.util.concurrent.Executors;
  * This class is acting as a UDP server to receive messages from neighbors
  */
 public class UdpListener extends Listener {
+
+    private static final Logger LOGGER = LogManager.getLogger(UdpListener.class.getName());
+
 
     private static final int THREAD_POOL_SIZE = 10;
 
@@ -28,8 +34,8 @@ public class UdpListener extends Listener {
     }
 
     @Override
-    public void initListener(int port) {
-        System.out.println("Starting UDP Listener...");
+    public void initListener(final int port) {
+        LOGGER.info("Starting UDP Listener...");
 
         final ExecutorService clientProcessingPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 
@@ -46,16 +52,15 @@ public class UdpListener extends Listener {
                     }
                     //TODO graceful shutdown
                 } catch (SocketException e) {
-                    //TODO log
-                    e.printStackTrace();
+                    LOGGER.error("SocketException in server thread", e);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOGGER.error("IOException in server thread", e);
                 }
             }
         };
         Thread serverThread = new Thread(serverTask);
         serverThread.start();
-        System.out.println("UDP Listener started on port : " + port);
+        LOGGER.info("UDP Listener started on port : {}", port);
     }
 
     @Override
@@ -99,9 +104,9 @@ public class UdpListener extends Listener {
         @Override
         public void run() {
             try {
-                System.out.println("UDP client connected!");
+                LOGGER.debug("UDP client connected!");
                 String receivedText = new String(datagramPacket.getData());
-                System.out.println("received: " + receivedText);
+                LOGGER.debug("received: {}", receivedText);
 
                 InetAddress senderAddress = datagramPacket.getAddress();
                 int senderPort = datagramPacket.getPort();
@@ -112,7 +117,7 @@ public class UdpListener extends Listener {
                 sendPacket.setData(response.getBytes());
                 clientSocket.send(sendPacket);
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error("IOException in client task", e);
             }
         }
     }

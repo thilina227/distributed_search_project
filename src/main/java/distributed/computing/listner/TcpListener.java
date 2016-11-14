@@ -1,5 +1,9 @@
 package distributed.computing.listner;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import sun.rmi.runtime.Log;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -16,6 +20,8 @@ import java.util.concurrent.Executors;
  */
 public class TcpListener extends Listener {
 
+    private static final Logger LOGGER = LogManager.getLogger(TcpListener.class.getName());
+
     private static final int THREAD_POOL_SIZE = 10;
     private static Listener instance;
 
@@ -24,8 +30,8 @@ public class TcpListener extends Listener {
     }
 
     @Override
-    public void initListener(int port) {
-        System.out.println("Starting TCP Listener...");
+    public void initListener(final int port) {
+        LOGGER.info("Starting TCP Listener...");
 
         final ExecutorService clientProcessingPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 
@@ -41,14 +47,13 @@ public class TcpListener extends Listener {
 
                     //TODO graceful shutdown
                 } catch (IOException e) {
-                    //TODO log
-                    e.printStackTrace();
+                    LOGGER.error("IOException in server thread", e);
                 }
             }
         };
         Thread serverThread = new Thread(serverTask);
         serverThread.start();
-        System.out.println("TCP Listener started on port : " + port);
+        LOGGER.info("TCP Listener started on port : {}", port);
     }
 
     @Override
@@ -79,18 +84,18 @@ public class TcpListener extends Listener {
         @Override
         public void run() {
             try {
-                System.out.println("TCP client connected!");
+                LOGGER.debug("TCP client connected!");
                 BufferedReader inFromClient =
                         new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 DataOutputStream outToClient = new DataOutputStream(clientSocket.getOutputStream());
                 String receivedText = inFromClient.readLine();
-                System.out.println("received: " + receivedText);
+                LOGGER.debug("received: {}", receivedText);
                 String response = processMessage(receivedText);
                 outToClient.writeBytes(response);
 
                 clientSocket.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error("IOException in client task", e);
             }
         }
     }
