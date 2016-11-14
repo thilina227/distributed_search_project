@@ -10,7 +10,7 @@ public class Main {
     private static String bootstrapServerIp = "localhost";
     private static int bootstrapServerPort = 9000;
 
-    private static int udpPort = 9001;//get from args
+    private static int udpPort = 9001;//TODO get from args
 
     public static void main(String[] args) {
         //TODO REG with BS
@@ -22,7 +22,7 @@ public class Main {
         Listener tcpListener = TcpListener.getInstance();
         tcpListener.initListener(bootstrapServerPort);
 
-//        Listener udpListener = UdpListener.getInstance();
-//        udpListener.initListener(udpPort);
+        Listener udpListener = UdpListener.getInstance();
+        udpListener.initListener(udpPort);
     }
 }

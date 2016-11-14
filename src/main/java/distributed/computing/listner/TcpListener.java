@@ -48,7 +48,7 @@ public class TcpListener extends Listener {
         };
         Thread serverThread = new Thread(serverTask);
         serverThread.start();
-        System.out.println("TCP Listener started!");
+        System.out.println("TCP Listener started on port : " + port);
     }
 
     @Override
@@ -83,8 +83,9 @@ public class TcpListener extends Listener {
                 BufferedReader inFromClient =
                         new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 DataOutputStream outToClient = new DataOutputStream(clientSocket.getOutputStream());
-                String requestMessage = inFromClient.readLine();
-                String response = processMessage(requestMessage);
+                String receivedText = inFromClient.readLine();
+                System.out.println("received: " + receivedText);
+                String response = processMessage(receivedText);
                 outToClient.writeBytes(response);
 
                 clientSocket.close();
