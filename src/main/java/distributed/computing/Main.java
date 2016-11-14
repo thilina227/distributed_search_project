@@ -22,7 +22,7 @@ public class Main {
         Listener tcpListener = TcpListener.getInstance();
         tcpListener.initListener(bootstrapServerPort);
 
-        Listener udpListener = UdpListener.getInstance();
-        udpListener.initListener(udpPort);
+//        Listener udpListener = UdpListener.getInstance();
+//        udpListener.initListener(udpPort);
     }
 }

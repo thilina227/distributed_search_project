@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by dev on 11/12/16.
@@ -14,6 +16,7 @@ import java.net.Socket;
  */
 public class TcpListener extends Listener {
 
+    private static final int THREAD_POOL_SIZE = 10;
     private static Listener instance;
 
     //Singleton
@@ -23,22 +26,17 @@ public class TcpListener extends Listener {
     @Override
     public void initListener(int port) {
         System.out.println("Starting TCP Listener...");
+
+        final ExecutorService clientProcessingPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
+
         Runnable serverTask = new Runnable() {
             @Override
             public void run() {
                 try {
                     ServerSocket serverSocket = new ServerSocket(port);
                     while (true) {
-                        Socket connectionSocket = serverSocket.accept();
-                        BufferedReader inFromClient =
-                                new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
-                        DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
-                        String requestMessage = inFromClient.readLine();
-
-                        //TODO process in a thread pool
-                        String response = processMessage(requestMessage);
-                        outToClient.writeBytes(response);
-
+                        Socket clientSocket = serverSocket.accept();
+                        clientProcessingPool.submit(new ClientTask(clientSocket));
                     }
 
                     //TODO graceful shutdown
@@ -69,5 +67,30 @@ public class TcpListener extends Listener {
             instance = new TcpListener();
         }
         return instance;
+    }
+
+    private class ClientTask implements Runnable {
+        private final Socket clientSocket;
+
+        private ClientTask(Socket clientSocket) {
+            this.clientSocket = clientSocket;
+        }
+
+        @Override
+        public void run() {
+            try {
+                System.out.println("TCP client connected!");
+                BufferedReader inFromClient =
+                        new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                DataOutputStream outToClient = new DataOutputStream(clientSocket.getOutputStream());
+                String requestMessage = inFromClient.readLine();
+                String response = processMessage(requestMessage);
+                outToClient.writeBytes(response);
+
+                clientSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
