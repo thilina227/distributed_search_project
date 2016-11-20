@@ -5,6 +5,8 @@ import distributed.computing.domain.model.Operation;
 
 /**
  * Created by dev on 11/19/16.
+ *
+ * //TODO use MessageUtils class instead of this
  */
 public class BootstrapMessageUtils {
 

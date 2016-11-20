@@ -1,5 +1,6 @@
 package distributed.computing;
 
+import distributed.computing.bootstrap.Bootstrap;
 import distributed.computing.domain.model.*;
 import distributed.computing.listner.Listener;
 import distributed.computing.listner.TcpListener;
@@ -21,9 +22,8 @@ public class Main {
 
     public static void main(String[] args) {
         LOGGER.info("******************Starting client app!*******************");
-        //TODO REG with BS
-    
         startListeners();
+        Bootstrap.register();//registering with bootstrap server
     }
 
     private static void startListeners() {

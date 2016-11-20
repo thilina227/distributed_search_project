@@ -27,7 +27,7 @@ public abstract class BootstrapResponse {
                 }
             }
         }
-
+        //TODO handle negative path
     }
 
     public int getMessageLength() {
