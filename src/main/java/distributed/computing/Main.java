@@ -1,8 +1,11 @@
 package distributed.computing;
 
+import distributed.computing.domain.model.*;
 import distributed.computing.listner.Listener;
 import distributed.computing.listner.TcpListener;
 import distributed.computing.listner.UdpListener;
+import distributed.computing.util.*;
+import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -12,14 +15,14 @@ public class Main {
 
     //TODO get from config
     private static String bootstrapServerIp = "localhost";
-    private static int bootstrapServerPort = 9000;
+    private static int bootstrapServerPort = 5000;
 
-    private static int udpPort = 9001;//TODO get from args
+    private static int udpPort = 5001;//TODO get from args
 
     public static void main(String[] args) {
         LOGGER.info("******************Starting client app!*******************");
         //TODO REG with BS
-
+    
         startListeners();
     }
 
