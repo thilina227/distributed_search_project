@@ -60,7 +60,7 @@ public class BootstrapMessageUtils {
     private static String formatToFourDigitString(int number) throws IllegalArgumentException {
         String strNumber = String.valueOf(number);
         if (strNumber.length() > MESSAGE_LENGTH_TOKEN_LENGH) {
-            throw new IllegalArgumentException("Message length is too long");
+            throw new IllegalArgumentException("Message is too long");
         } else {
             while (strNumber.length() == MESSAGE_LENGTH_TOKEN_LENGH) {
                 strNumber = '0' + strNumber;
