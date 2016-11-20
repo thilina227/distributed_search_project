@@ -3,7 +3,7 @@ package distributed.computing.domain.model;
 /**
  * Created by dev on 11/10/16.
  */
-public class Neighbor {
+public class PeerNode {
 
     public enum Type {
         PARENT, CHILD
@@ -14,11 +14,16 @@ public class Neighbor {
     private String username;
     private Type relationship;
 
-    public Neighbor(String ip, String port, String username, Type relationship) {
+    public PeerNode(String ip, String port, String username, Type relationship) {
         this.ip = ip;
         this.port = port;
         this.username = username;
         this.relationship = relationship;
+    }
+
+    public PeerNode(String ip, String port) {
+        this.ip = ip;
+        this.port = port;
     }
 
     public String getIp() {
@@ -55,7 +60,7 @@ public class Neighbor {
 
     @Override
     public String toString() {
-        return "Neighbor{" +
+        return "PeerNode{" +
                 "ip='" + ip + '\'' +
                 ", port='" + port + '\'' +
                 ", username='" + username + '\'' +
