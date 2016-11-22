@@ -22,8 +22,10 @@ public class Main {
 
     public static void main(String[] args) {
         LOGGER.info("******************Starting client app!*******************");
-        startListeners();
-        Bootstrap.register();//registering with bootstrap server
+        peerForm form = new peerForm();
+        form.setVisible(true);
+        //startListeners();
+        //Bootstrap.register();//registering with bootstrap server
     }
 
     private static void startListeners() {
