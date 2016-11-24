@@ -46,7 +46,7 @@ public class BootstrapMessageUtils {
      */
     private static String prependLength(String message) throws IllegalArgumentException {
         message = ' ' + message;//prepend a space
-        message = formatToFourDigitString(message.length()) + message;
+        message = formatToFourDigitString(message.length() + MESSAGE_LENGTH_TOKEN_LENGH) + message;
         return message;
     }
 
@@ -62,7 +62,7 @@ public class BootstrapMessageUtils {
         if (strNumber.length() > MESSAGE_LENGTH_TOKEN_LENGH) {
             throw new IllegalArgumentException("Message is too long");
         } else {
-            while (strNumber.length() == MESSAGE_LENGTH_TOKEN_LENGH) {
+            while (strNumber.length() != MESSAGE_LENGTH_TOKEN_LENGH) {
                 strNumber = '0' + strNumber;
             }
         }

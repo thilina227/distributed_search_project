@@ -1,6 +1,7 @@
 package distributed.computing.bootstrap;
 
 import distributed.computing.bootstrap.response.RegResponse;
+import distributed.computing.config.BootstrapServerConfig;
 import distributed.computing.config.NodeContext;
 import distributed.computing.connector.TcpCommunicator;
 import distributed.computing.domain.model.PeerNode;
@@ -32,8 +33,8 @@ public class Bootstrap {
     public static boolean register() {
         TcpCommunicator tcpCommunicator = new TcpCommunicator();
         try {
-            String response = tcpCommunicator.sendMessage(BootstrapServer.getBootstrapServerIp(),
-                    BootstrapServer.getPort(), BootstrapMessageUtils.constructRegMessage());
+            String response = tcpCommunicator.sendMessage(BootstrapServerConfig.getHost(),
+                    BootstrapServerConfig.getPort(), BootstrapMessageUtils.constructRegMessage());
 
             RegResponse regResponse = new RegResponse(response);
             if (regResponse.getStatusCode() == ErrorCodeResolver.OK_SUCCESS) {
@@ -80,8 +81,8 @@ public class Bootstrap {
     public static boolean unregister() {
         TcpCommunicator tcpCommunicator = new TcpCommunicator();
         try {
-            String response = tcpCommunicator.sendMessage(BootstrapServer.getBootstrapServerIp(),
-                    BootstrapServer.getPort(), BootstrapMessageUtils.constructUnRegMessage());
+            String response = tcpCommunicator.sendMessage(BootstrapServerConfig.getHost(),
+                    BootstrapServerConfig.getPort(), BootstrapMessageUtils.constructUnRegMessage());
 
             //TODO validate response
             //if (response is ok return true)
