@@ -1,6 +1,7 @@
 package distributed.computing;
 
 import distributed.computing.bootstrap.Bootstrap;
+import distributed.computing.bootstrap.BootstrapShutdownHook;
 import distributed.computing.config.BootstrapServerConfig;
 import distributed.computing.config.NodeContext;
 import distributed.computing.listner.Listener;
@@ -26,6 +27,7 @@ public class Main {
             LOGGER.info("******************Starting client app!*******************");
             startListeners();
             Bootstrap.register();
+            Runtime.getRuntime().addShutdownHook(new BootstrapShutdownHook());
         }
 
         //TODO get server details from form

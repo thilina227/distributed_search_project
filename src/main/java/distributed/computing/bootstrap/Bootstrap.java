@@ -31,6 +31,7 @@ public class Bootstrap {
      * @return boolean success/fail
      */
     public static boolean register() {
+        LOGGER.info("Registering with Bootstrap server");
         TcpCommunicator tcpCommunicator = new TcpCommunicator();
         try {
             String response = tcpCommunicator.sendMessage(BootstrapServerConfig.getHost(),
@@ -79,6 +80,8 @@ public class Bootstrap {
     }
 
     public static boolean unregister() {
+        LOGGER.info("UnRegistering from Bootstrap server");
+
         TcpCommunicator tcpCommunicator = new TcpCommunicator();
         try {
             String response = tcpCommunicator.sendMessage(BootstrapServerConfig.getHost(),
