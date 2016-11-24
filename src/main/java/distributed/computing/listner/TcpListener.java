@@ -15,6 +15,7 @@ import java.util.concurrent.Executors;
 
 /**
  * Created by dev on 11/12/16.
+ * //TODO remove this class
  *
  * This class is acting as a TCP server to receive messages from Bootstrap server
  */

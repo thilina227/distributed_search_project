@@ -29,8 +29,9 @@ public class Main {
     }
 
     private static void startListeners() {
-        Listener tcpListener = TcpListener.getInstance();
-        tcpListener.initListener(bootstrapServerPort);
+        //TODO remove TcpListener
+//        Listener tcpListener = TcpListener.getInstance();
+//        tcpListener.initListener(bootstrapServerPort);
 
         Listener udpListener = UdpListener.getInstance();
         udpListener.initListener(udpPort);
