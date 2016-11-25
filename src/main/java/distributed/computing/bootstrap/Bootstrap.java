@@ -38,13 +38,15 @@ public class Bootstrap {
                     BootstrapServerConfig.getPort(), BootstrapMessageUtils.constructRegMessage());
 
             RegResponse regResponse = new RegResponse(response);
-            if (regResponse.getStatusCode() == ErrorCodeResolver.OK_SUCCESS) {
-
+            if (regResponse.getStatusCode() < ErrorCodeResolver.OK_MIN_FAIL_RANGE) {
+                //This means reg is success
                 connectPeers(regResponse);
 
 
                 return true;
             } else {
+                LOGGER.error("Registration failed, responseCode: {}, responseMessage: {}",
+                        regResponse.getStatusCode(), regResponse.getStatusMessage());
                 //TODO handle
             }
 
@@ -63,10 +65,13 @@ public class Bootstrap {
             LOGGER.info("No peer nodes in the network yet");
         } else if (nodeCount == 1) {
             child1 = regResponse.getPeerNodes().get(0);
+            LOGGER.info("1 node in the network");
         } else if (nodeCount == 2) {
             child1 = regResponse.getPeerNodes().get(0);
             child2 = regResponse.getPeerNodes().get(1);
+            LOGGER.info("2 nodes in the network");
         } else {
+            LOGGER.info(nodeCount + " nodes in the network");
             child1 = regResponse.getPeerNodes().get(new Random().nextInt(nodeCount));
             child2 = regResponse.getPeerNodes().get(new Random().nextInt(nodeCount));
         }
@@ -77,6 +82,8 @@ public class Bootstrap {
             NodeContext.addChild(child1);
         if (child2 != null)
             NodeContext.addChild(child2);
+
+        LOGGER.info("picked children: {}", NodeContext.getChildren());
     }
 
     public static boolean unregister() {

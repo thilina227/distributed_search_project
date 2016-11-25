@@ -21,7 +21,7 @@ public class RegResponse extends BootstrapResponse {
             if (this.getMessageBody().contains(MESSAGE_DELIMITER)) {
                 StringTokenizer tokenizer = new StringTokenizer(this.getMessageBody(), MESSAGE_DELIMITER);
                 while (tokenizer.hasMoreTokens()) {
-                    PeerNode peerNode = new PeerNode(tokenizer.nextToken(), tokenizer.nextToken());
+                    PeerNode peerNode = new PeerNode(tokenizer.nextToken(), tokenizer.nextToken(), tokenizer.nextToken());
                     peerNodes.add(peerNode);
                 }
             }

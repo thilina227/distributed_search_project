@@ -21,9 +21,10 @@ public class PeerNode {
         this.relationship = relationship;
     }
 
-    public PeerNode(String ip, String port) {
+    public PeerNode(String ip, String port, String username) {
         this.ip = ip;
         this.port = port;
+        this.username = username;
     }
 
     public String getIp() {

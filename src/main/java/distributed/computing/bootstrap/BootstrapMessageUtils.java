@@ -2,6 +2,8 @@ package distributed.computing.bootstrap;
 
 import distributed.computing.config.NodeContext;
 import distributed.computing.domain.model.Operation;
+import distributed.computing.util.MessageUtils;
+import distributed.computing.util.Utils;
 
 /**
  * Created by dev on 11/19/16.
@@ -10,7 +12,7 @@ import distributed.computing.domain.model.Operation;
  */
 public class BootstrapMessageUtils {
 
-    private static String REG_UNREG_MESSAGE_FORMAT = "%s %s %d %s";
+    private static final String REG_UNREG_MESSAGE_FORMAT = "%s %s %d %s" + System.lineSeparator();
 
     private static final int MESSAGE_LENGTH_TOKEN_LENGH = 4;
 
