@@ -5,6 +5,7 @@ import distributed.computing.config.BootstrapServerConfig;
 import distributed.computing.config.NodeContext;
 import distributed.computing.connector.TcpCommunicator;
 import distributed.computing.domain.model.PeerNode;
+import distributed.computing.messaging.Connect;
 import distributed.computing.util.ErrorCodeResolver;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -66,17 +67,36 @@ public class Bootstrap {
         } else if (nodeCount == 1) {
             child1 = regResponse.getPeerNodes().get(0);
             LOGGER.info("1 node in the network");
+            if (!Connect.connectWithPeer(child1)) {
+                child1 = null;
+            }
         } else if (nodeCount == 2) {
             child1 = regResponse.getPeerNodes().get(0);
+            if(!Connect.connectWithPeer(child1))
+                child1 = null;
             child2 = regResponse.getPeerNodes().get(1);
+            if(!Connect.connectWithPeer(child2))
+                child2 = null;
             LOGGER.info("2 nodes in the network");
         } else {
             LOGGER.info(nodeCount + " nodes in the network");
+
+
+            child1 = connectRandomChild(regResponse, nodeCount);
+            child2 = connectRandomChild(regResponse, nodeCount);
+            if (child1 != null && child2 != null && child1.getUsername().equals(child2.getUsername())) {
+                child2 = connectRandomChild(regResponse, nodeCount);
+                if (child1.getUsername().equals(child2.getUsername())) {
+                    child2 = null;
+                }
+            }
+
             child1 = regResponse.getPeerNodes().get(new Random().nextInt(nodeCount));
             child2 = regResponse.getPeerNodes().get(new Random().nextInt(nodeCount));
+
         }
 
-        //TODO connect message to peers
+        //TODO connectWithPeer message to peers
 
         if (child1 != null)
             NodeContext.addChild(child1);
@@ -84,6 +104,26 @@ public class Bootstrap {
             NodeContext.addChild(child2);
 
         LOGGER.info("picked children: {}", NodeContext.getChildren());
+    }
+
+    /**
+     * Connect with a random peer node as a parent
+     *
+     * @param regResponse reg response
+     * @param nodeCount   number of nodes in the network
+     */
+    private static PeerNode connectRandomChild(RegResponse regResponse, int nodeCount) {
+        PeerNode child = regResponse.getPeerNodes().get(new Random().nextInt(nodeCount));
+        if (Connect.connectWithPeer(child)) {
+            return child;
+        } else {
+            child = regResponse.getPeerNodes().get(new Random().nextInt(nodeCount));
+            if (Connect.connectWithPeer(child)) {
+                return child;
+            } else {
+                return null;
+            }
+        }
     }
 
     public static boolean unregister() {

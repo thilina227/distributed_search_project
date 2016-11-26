@@ -20,16 +20,18 @@ public class Connect {
     /**
      * Connect with a peer
      * */
-    public static boolean connect(PeerNode peerNode) {
+    public static boolean connectWithPeer(PeerNode peerNode) {
         UdpCommunicator udpCommunicator = new UdpCommunicator();
         try {
             String connectResponse = udpCommunicator.sendMessage(peerNode.getIp(), peerNode.getPort(),
                     PeerMessageUtils.constructConnectMessage(peerNode));
             if (connectResponse.contains(CONNECT_OK_KEYWORD)) {
                 return true;
+            } else {
+                LOGGER.error("Failed to connectWithPeer with peer: {}", peerNode);
             }
         } catch (IOException e) {
-            LOGGER.error("Failed to connect with peer: {}", peerNode, e);
+            LOGGER.error("Failed to connectWithPeer with peer: {}", peerNode, e);
         }
         return false;
     }

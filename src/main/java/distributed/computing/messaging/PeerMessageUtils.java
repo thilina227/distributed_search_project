@@ -11,16 +11,51 @@ import distributed.computing.util.MessageUtils;
 public class PeerMessageUtils {
 
     private static final String CONNECT_MESSAGE_FORMAT = "%s %s %d %s%s";
+    private static final String CONNECT_RESPONSE_KEYWORD = "CONNECTOK";
+    private static final String HEART_BEAT_RESPONSE_KEYWORD = "PINGOK";
+    private static final String ERROR_RESPONSE_KEYWORD = "ERROR";
 
     /**
-     * Construct connect message
+     * Construct connectWithPeer message
      * eg: length CONNECT IP port username
-     * @param peerNode peer node to connect
+     *
+     * @param peerNode peer node to connectWithPeer
      * @return String message
-     * */
+     */
     public static String constructConnectMessage(PeerNode peerNode) {
         String message = String.format(CONNECT_MESSAGE_FORMAT, Operation.CONNECT, peerNode.getIp(), peerNode.getPort(), NodeContext.getUserName(), System.lineSeparator());
         message = MessageUtils.prependLength(message);
         return message;
+    }
+
+
+    /**
+     * Construct connect response message
+     *
+     * @return message
+     */
+    public static String constructConnectResponse() {
+        String message = CONNECT_RESPONSE_KEYWORD + " " + 0;
+        return MessageUtils.prependLength(message);
+    }
+
+    /**
+     * Construct HEART BEAT response message
+     *
+     * @return message
+     */
+    public static String constructHeartBeatResponse() {
+        String message = HEART_BEAT_RESPONSE_KEYWORD + " " + 0;
+        return MessageUtils.prependLength(message);
+    }
+
+    /**
+     * Construct ERROR response message
+     *
+     * @return message
+     */
+    public static String constructErrorResponse() {
+        String message = ERROR_RESPONSE_KEYWORD + " " + 9999;
+        return MessageUtils.prependLength(message);
     }
 }
