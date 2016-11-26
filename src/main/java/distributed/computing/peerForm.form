@@ -38,7 +38,7 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="peerName" pref="119" max="32767" attributes="0"/>
+                          <Component id="NodeName" pref="119" max="32767" attributes="0"/>
                           <Component id="bsIP" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
@@ -46,7 +46,7 @@
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="peerPort" min="-2" pref="54" max="-2" attributes="0"/>
+                              <Component id="NodePort" min="-2" pref="54" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
@@ -91,7 +91,7 @@
                       </Group>
                   </Group>
               </Group>
-              <EmptySpace pref="25" max="32767" attributes="0"/>
+              <EmptySpace pref="19" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -101,10 +101,10 @@
               <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="peerPort" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="NodePort" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="applyButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="peerName" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="NodeName" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -176,10 +176,10 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel3">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Peer Port:"/>
+        <Property name="text" type="java.lang.String" value="Node Port:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="peerPort">
+    <Component class="javax.swing.JTextField" name="NodePort">
     </Component>
     <Component class="javax.swing.JButton" name="applyButton">
       <Properties>
@@ -192,10 +192,10 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel4">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Peer Name:"/>
+        <Property name="text" type="java.lang.String" value="Node Name:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="peerName">
+    <Component class="javax.swing.JTextField" name="NodeName">
     </Component>
     <Component class="javax.swing.JButton" name="bsRegButton">
       <Properties>

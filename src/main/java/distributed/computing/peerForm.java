@@ -5,6 +5,16 @@
  */
 package distributed.computing;
 
+import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
+import distributed.computing.bootstrap.Bootstrap;
+import distributed.computing.bootstrap.BootstrapShutdownHook;
+import distributed.computing.config.BootstrapServerConfig;
+import distributed.computing.config.NodeContext;
+import distributed.computing.domain.model.PeerNode;
+import distributed.computing.listner.Listener;
+import distributed.computing.listner.UdpListener;
+import distributed.computing.util.Utils;
+
 /**
  *
  * @author yasitham
@@ -32,10 +42,10 @@ public class peerForm extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         bsPort = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        peerPort = new javax.swing.JTextField();
+        NodePort = new javax.swing.JTextField();
         applyButton = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
-        peerName = new javax.swing.JTextField();
+        NodeName = new javax.swing.JTextField();
         bsRegButton = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -68,7 +78,7 @@ public class peerForm extends javax.swing.JFrame {
 
         jLabel2.setText("BS Port:");
 
-        jLabel3.setText("Peer Port:");
+        jLabel3.setText("Node Port:");
 
         applyButton.setText("Apply");
         applyButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -82,7 +92,7 @@ public class peerForm extends javax.swing.JFrame {
             }
         });
 
-        jLabel4.setText("Peer Name:");
+        jLabel4.setText("Node Name:");
 
         bsRegButton.setText("BS Register");
         bsRegButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -143,14 +153,14 @@ public class peerForm extends javax.swing.JFrame {
                             .addComponent(jLabel1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(peerName, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
+                            .addComponent(NodeName, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
                             .addComponent(bsIP))
                         .addGap(25, 25, 25)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(peerPort, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(NodePort, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addGap(18, 18, 18)
@@ -182,7 +192,7 @@ public class peerForm extends javax.swing.JFrame {
                                 .addComponent(jLabel5)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(peerName1)))))
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -190,10 +200,10 @@ public class peerForm extends javax.swing.JFrame {
                 .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(peerPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(NodePort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(applyButton)
                     .addComponent(jLabel4)
-                    .addComponent(peerName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(NodeName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
@@ -250,16 +260,47 @@ public class peerForm extends javax.swing.JFrame {
 
     private void bsRegButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bsRegButtonMouseClicked
         // TODO add your handling code here:
+        BootstrapServerConfig.setHost(bsIP.getText());
+        BootstrapServerConfig.setPort(Integer.parseInt(bsPort.getText()));
+        System.out.println("BS IP: " + bsIP.getText() + ", BS Port: " +  bsPort.getText());
+        LOGGER.info("******************Starting client app!*******************");
+        
+        Listener udpListener = UdpListener.getInstance();
+        udpListener.initListener(NodeContext.getPort());
+        
+        Bootstrap.register(this);
+        int i = 0;
+        for (PeerNode node : NodeContext.getChildren()){
+            if(i == 0)
+                peerName1.setText(node.getUsername());
+            else if (i == 1){
+                peerName2.setText(node.getUsername());
+            }
+            i++;
+        } 
+        Runtime.getRuntime().addShutdownHook(new BootstrapShutdownHook());
     }//GEN-LAST:event_bsRegButtonMouseClicked
 
     private void applyButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_applyButtonMouseClicked
-        // TODO add your handling code here:
+        NodeContext.setIp(Utils.getIP());
+        NodeContext.setPort(Integer.parseInt(NodePort.getText()));
+        NodeContext.setUserName(NodeName.getText()); 
+        System.out.println("Node Name: "+ NodeName.getText() + ", Node IP: "+  Utils.getIP()+", Node Port:"+ NodePort.getText());
+// TODO add your handling code here:
     }//GEN-LAST:event_applyButtonMouseClicked
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_searchButtonActionPerformed
 
+    public void setSendMessage(String message){
+        sendArea.append(message);
+    }
+    
+    public void setResponseMessage(String message){
+        receiveArea.append(message);
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -296,6 +337,8 @@ public class peerForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField NodeName;
+    private javax.swing.JTextField NodePort;
     private javax.swing.JButton applyButton;
     private javax.swing.JTextField bsIP;
     private javax.swing.JTextField bsPort;
@@ -314,13 +357,13 @@ public class peerForm extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTextField keyWord;
-    private javax.swing.JTextField peerName;
     private javax.swing.JLabel peerName1;
     private javax.swing.JLabel peerName2;
-    private javax.swing.JTextField peerPort;
     private javax.swing.JTextArea receiveArea;
     private javax.swing.JTextArea resultArea;
     private javax.swing.JButton searchButton;
     private javax.swing.JTextArea sendArea;
     // End of variables declaration//GEN-END:variables
+
+  
 }
