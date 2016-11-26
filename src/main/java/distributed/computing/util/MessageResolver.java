@@ -26,6 +26,15 @@ public class MessageResolver {
                 return PeerMessageUtils.constructHeartBeatResponse();
             }
 
+            if (message.contains(String.valueOf(Operation.DISCONNECT))) {
+                //message received in format: 0037 DISCONNECT localhost 9001 test2
+                String chunks [] = message.split(PEER_MESSAGE_DELIMITER);
+                PeerNode parent = new PeerNode(chunks[2], Integer.parseInt(chunks[3]), chunks[4]);
+                NodeContext.removeParent(parent);
+                LOGGER.info("Disconnected parent: {}", parent);
+                return PeerMessageUtils.constructDisconnectResponse();
+            }
+
             if (message.contains(String.valueOf(Operation.CONNECT))) {
                 //message received in format: 0034 CONNECT localhost 9001 test2
                 String chunks [] = message.split(PEER_MESSAGE_DELIMITER);
@@ -33,14 +42,6 @@ public class MessageResolver {
                 NodeContext.addParent(parent);
                 LOGGER.info("Connected with parent: {}", parent);
                 return PeerMessageUtils.constructConnectResponse();
-            }
-
-            if (message.contains(String.valueOf(Operation.DISCONNECT))) {
-                //message received in format: 0037 DISCONNECT localhost 9001 test2
-                String chunks [] = message.split(PEER_MESSAGE_DELIMITER);
-                PeerNode parent = new PeerNode(chunks[2], Integer.parseInt(chunks[3]), chunks[4]);
-                NodeContext.removeParent(parent);
-                LOGGER.info("Disconnected parent: {}", parent);
             }
 
             //TODO implement other operations

@@ -12,6 +12,7 @@ public class PeerMessageUtils {
 
     private static final String CONNECT_MESSAGE_FORMAT = "%s %s %d %s%s";
     private static final String CONNECT_RESPONSE_KEYWORD = "CONNECTOK";
+    private static final String DISCONNECT_RESPONSE_KEYWORD = "DISCONNECTOK";
     private static final String HEART_BEAT_RESPONSE_KEYWORD = "PINGOK";
     private static final String ERROR_RESPONSE_KEYWORD = "ERROR";
 
@@ -70,6 +71,11 @@ public class PeerMessageUtils {
      */
     public static String constructErrorResponse() {
         String message = ERROR_RESPONSE_KEYWORD + " " + 9999;
+        return MessageUtils.prependLength(message);
+    }
+
+    public static String constructDisconnectResponse() {
+        String message = DISCONNECT_RESPONSE_KEYWORD + " " + 0;
         return MessageUtils.prependLength(message);
     }
 }
