@@ -85,4 +85,18 @@ public class NodeContext {
         }
         return parents;
     }
+
+    /**
+     * Remove parent node
+     *
+     * @param parent parent node
+     */
+    public static void removeParent(PeerNode parent) {
+        List<PeerNode> parents = NodeContext.getParents();
+        for (PeerNode node : parents) {
+            if (parent.getUsername().equals(node.getUsername())) {
+                peerNodes.remove(node);
+            }
+        }
+    }
 }

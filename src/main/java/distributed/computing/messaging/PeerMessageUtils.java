@@ -28,6 +28,20 @@ public class PeerMessageUtils {
         return message;
     }
 
+    /**
+     * Construct connectWithPeer message
+     * eg: length CONNECT IP port username
+     *
+     * @param peerNode peer node to connectWithPeer
+     * @return String message
+     */
+    public static String constructDisconnectMessage(PeerNode peerNode) {
+        String message = String.format(CONNECT_MESSAGE_FORMAT, Operation.DISCONNECT, peerNode.getIp(), peerNode.getPort(), NodeContext.getUserName(), System.lineSeparator());
+        message = MessageUtils.prependLength(message);
+        return message;
+    }
+
+
 
     /**
      * Construct connect response message
