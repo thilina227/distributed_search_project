@@ -1,5 +1,6 @@
 package distributed.computing.listner;
 
+import distributed.computing.util.MessageResolver;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -65,8 +66,7 @@ public class UdpListener extends Listener {
 
     @Override
     public String processMessage(String message) {
-        //TODO implement
-        return "test";
+        return MessageResolver.resolvePeerMessage(message);
     }
 
     /**

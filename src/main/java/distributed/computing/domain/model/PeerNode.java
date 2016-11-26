@@ -10,18 +10,18 @@ public class PeerNode {
     }
 
     private String ip;
-    private String port;
+    private int port;
     private String username;
     private Type relationship;
 
-    public PeerNode(String ip, String port, String username, Type relationship) {
+    public PeerNode(String ip, int port, String username, Type relationship) {
         this.ip = ip;
         this.port = port;
         this.username = username;
         this.relationship = relationship;
     }
 
-    public PeerNode(String ip, String port, String username) {
+    public PeerNode(String ip, int port, String username) {
         this.ip = ip;
         this.port = port;
         this.username = username;
@@ -35,11 +35,11 @@ public class PeerNode {
         this.ip = ip;
     }
 
-    public String getPort() {
+    public int getPort() {
         return port;
     }
 
-    public void setPort(String port) {
+    public void setPort(int port) {
         this.port = port;
     }
 
