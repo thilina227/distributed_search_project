@@ -9,4 +9,4 @@ Simple distributed peer to peer network
 ##Run
 create package
 - mvn clean install
-Run jar file
+- java -jar <jar file>.jar
