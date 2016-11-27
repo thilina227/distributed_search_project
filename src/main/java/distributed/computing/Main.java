@@ -6,6 +6,7 @@ import distributed.computing.config.BootstrapServerConfig;
 import distributed.computing.config.NodeContext;
 import distributed.computing.listner.Listener;
 import distributed.computing.listner.UdpListener;
+import distributed.computing.messaging.broadcast.MessageCache;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,6 +29,7 @@ public class Main {
             startListeners();
             Bootstrap.register();
             Runtime.getRuntime().addShutdownHook(new BootstrapShutdownHook());
+            MessageCache.initCachingScheduler();//init caching scheduler
         }
 
         //TODO get server details from form
