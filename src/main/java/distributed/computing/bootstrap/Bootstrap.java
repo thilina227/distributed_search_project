@@ -5,6 +5,7 @@ import distributed.computing.config.BootstrapServerConfig;
 import distributed.computing.config.NodeContext;
 import distributed.computing.connector.TcpCommunicator;
 import distributed.computing.domain.model.PeerNode;
+import distributed.computing.peerForm;
 import distributed.computing.messaging.Connect;
 import distributed.computing.util.ErrorCodeResolver;
 import org.apache.logging.log4j.LogManager;
@@ -31,13 +32,17 @@ public class Bootstrap {
      *
      * @return boolean success/fail
      */
-    public static boolean register() {
+    public static boolean register(peerForm form) {
         LOGGER.info("Registering with Bootstrap server");
         TcpCommunicator tcpCommunicator = new TcpCommunicator();
         try {
+            String message = BootstrapMessageUtils.constructRegMessage();
             String response = tcpCommunicator.sendMessage(BootstrapServerConfig.getHost(),
-                    BootstrapServerConfig.getPort(), BootstrapMessageUtils.constructRegMessage());
-
+                    BootstrapServerConfig.getPort(), message);
+            
+            form.setSendMessage(message);
+            form.setResponseMessage(response);
+            
             RegResponse regResponse = new RegResponse(response);
             if (regResponse.getStatusCode() < ErrorCodeResolver.OK_MIN_FAIL_RANGE) {
                 //This means reg is success

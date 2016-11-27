@@ -1,12 +1,8 @@
 package distributed.computing;
 
-import distributed.computing.bootstrap.Bootstrap;
-import distributed.computing.bootstrap.BootstrapShutdownHook;
-import distributed.computing.config.BootstrapServerConfig;
 import distributed.computing.config.NodeContext;
 import distributed.computing.listner.Listener;
 import distributed.computing.listner.UdpListener;
-import distributed.computing.messaging.broadcast.MessageCache;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,21 +12,25 @@ public class Main {
 
     public static void main(String[] args) {
         //TODO replace this with form
-        if (args.length < 5) {
-            System.out.println("Usage: clientapp <client ip> <username> <client port> <bootstrap ip> <bootstrap port>");
-        } else {
-            NodeContext.setIp(args[0]);
-            NodeContext.setPort(Integer.parseInt(args[1]));
-            NodeContext.setUserName(args[2]);
+//        if (args.length < 5) {
+//            System.out.println("Usage: clientapp <client ip> <username> <client port> <bootstrap ip> <bootstrap port>");
+//        } else {
 
-            BootstrapServerConfig.setHost(args[3]);
-            BootstrapServerConfig.setPort(Integer.parseInt(args[4]));
-            LOGGER.info("******************Starting client app!*******************");
-            startListeners();
-            Bootstrap.register();
-            Runtime.getRuntime().addShutdownHook(new BootstrapShutdownHook());
-            MessageCache.initCachingScheduler();//init caching scheduler
-        }
+
+//            NodeContext.setIp(Utils.getIP());
+//            NodeContext.setPort(Integer.parseInt(args[1]));
+//            NodeContext.setUserName(args[2]);
+
+//            BootstrapServerConfig.setHost(args[3]);
+//            BootstrapServerConfig.setPort(Integer.parseInt(args[4]));
+//            LOGGER.info("******************Starting client app!*******************");
+//            startListeners();
+//            Bootstrap.register();
+//            Runtime.getRuntime().addShutdownHook(new BootstrapShutdownHook());
+//            MessageCache.initCachingScheduler();//init caching scheduler
+//        }
+        peerForm form = new peerForm();
+        form.setVisible(true);
 
         //TODO get server details from form
 //        peerForm form = new peerForm();

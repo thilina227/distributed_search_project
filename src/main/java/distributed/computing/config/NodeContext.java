@@ -21,7 +21,7 @@ public class NodeContext {
     public static void setIp(String ip) {
         NodeContext.ip = ip;
     }
-
+    
     public static int getPort() {
         return port;
     }

@@ -25,7 +25,7 @@ public class TcpCommunicator implements Communicator {
         DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
 
         outToServer.write(message.getBytes());
-
+        
         BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         String response = inFromServer.readLine();
 
