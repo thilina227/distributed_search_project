@@ -5,7 +5,6 @@
  */
 package distributed.computing;
 
-import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
 import distributed.computing.bootstrap.Bootstrap;
 import distributed.computing.bootstrap.BootstrapShutdownHook;
 import distributed.computing.config.BootstrapServerConfig;
@@ -14,12 +13,17 @@ import distributed.computing.domain.model.PeerNode;
 import distributed.computing.listner.Listener;
 import distributed.computing.listner.UdpListener;
 import distributed.computing.util.Utils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
  * @author yasitham
  */
 public class peerForm extends javax.swing.JFrame {
+
+    private static final Logger LOGGER = LogManager.getLogger(peerForm.class.getName());
+
 
     /**
      * Creates new form peerForm
