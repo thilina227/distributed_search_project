@@ -3,6 +3,7 @@ package distributed.computing.config;
 import distributed.computing.domain.model.PeerNode;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -12,7 +13,8 @@ public class NodeContext {
     private static String ip;
     private static int port;
     private static String userName;
-    private static List<PeerNode> peerNodes = new ArrayList<>();
+    //thread safe list
+    private static List<PeerNode> peerNodes = Collections.synchronizedList(new ArrayList<PeerNode>());
 
     public static String getIp() {
         return ip;
