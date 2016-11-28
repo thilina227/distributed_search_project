@@ -86,22 +86,30 @@ public class Bootstrap {
         } else {
             LOGGER.info(nodeCount + " nodes in the network");
 
-
             child1 = connectRandomChild(regResponse, nodeCount);
             child2 = connectRandomChild(regResponse, nodeCount);
+
+            nodeCount = regResponse.getPeerNodes().size();//re evaluate node count
+
+            //retry
+            if (child1 == null && !regResponse.getPeerNodes().isEmpty()) {
+                child1 = connectRandomChild(regResponse, nodeCount);
+            }
+
+            //retry
+            if (child2 == null && !regResponse.getPeerNodes().isEmpty()) {
+                child2 = connectRandomChild(regResponse, nodeCount);
+            }
+
             if (child1 != null && child2 != null && child1.getUsername().equals(child2.getUsername())) {
+                //hopefully it won't reach here. if so retry one last time
                 child2 = connectRandomChild(regResponse, nodeCount);
                 if (child1.getUsername().equals(child2.getUsername())) {
                     child2 = null;
                 }
             }
 
-            child1 = regResponse.getPeerNodes().get(new Random().nextInt(nodeCount));
-            child2 = regResponse.getPeerNodes().get(new Random().nextInt(nodeCount));
-
         }
-
-        //TODO connectWithPeer message to peers
 
         if (child1 != null)
             NodeContext.addChild(child1);
@@ -120,10 +128,12 @@ public class Bootstrap {
     private static PeerNode connectRandomChild(RegResponse regResponse, int nodeCount) {
         PeerNode child = regResponse.getPeerNodes().get(new Random().nextInt(nodeCount));
         if (Connect.connectWithPeer(child)) {
+            regResponse.getPeerNodes().remove(child);//removing from te pool to avoid duplication
             return child;
         } else {
             child = regResponse.getPeerNodes().get(new Random().nextInt(nodeCount));
             if (Connect.connectWithPeer(child)) {
+                regResponse.getPeerNodes().remove(child);//removing from te pool to avoid duplication
                 return child;
             } else {
                 return null;
