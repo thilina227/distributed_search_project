@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by dev on 11/26/16.
@@ -14,7 +15,7 @@ public class MessageCache extends Thread{
 
     public static final int CACHE_TTL = 600; //10 minutes ; 600 seconds
 
-    private static Map<String, Integer> messageCache = new HashMap<>();
+    private static Map<String, Integer> messageCache = new ConcurrentHashMap<>();//thread safe map
 
     /**
      * Check a message id in cache
@@ -31,6 +32,7 @@ public class MessageCache extends Thread{
      * Init caching scheduler
      * */
     public static void initCachingScheduler() {
+        LOGGER.info("Starting message cache scheduler");
         new MessageCache().run();
     }
 
@@ -39,6 +41,7 @@ public class MessageCache extends Thread{
         try {
             while (true) {
                 Thread.sleep(5000);
+//                LOGGER.debug("Decrementing cache");
                 for (String id : messageCache.keySet()) {
                     if (messageCache.get(id) - 5 <= 0) {
                         LOGGER.debug("invalidating cache: {}", id);;

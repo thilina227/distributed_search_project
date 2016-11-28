@@ -12,6 +12,7 @@ import distributed.computing.config.NodeContext;
 import distributed.computing.domain.model.PeerNode;
 import distributed.computing.listner.Listener;
 import distributed.computing.listner.UdpListener;
+import distributed.computing.messaging.broadcast.MessageCache;
 import distributed.computing.util.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -283,6 +284,7 @@ public class peerForm extends javax.swing.JFrame {
             i++;
         } 
         Runtime.getRuntime().addShutdownHook(new BootstrapShutdownHook());
+        MessageCache.initCachingScheduler();//init caching scheduler
     }//GEN-LAST:event_bsRegButtonMouseClicked
 
     private void applyButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_applyButtonMouseClicked
