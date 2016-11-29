@@ -30,6 +30,9 @@ public class UdpListener extends Listener {
     private byte[] receiveData = new byte[1024];
     private byte[] sendData = new byte[1024];
 
+    private static Runnable serverTask;
+    private static Thread serverThread;
+
     //Singleton
     private UdpListener() {
     }
@@ -40,29 +43,41 @@ public class UdpListener extends Listener {
 
         final ExecutorService clientProcessingPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 
-        Runnable serverTask = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    DatagramSocket datagramSocket = new DatagramSocket(port);
+        if (serverTask == null) {
+            serverTask = new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        DatagramSocket datagramSocket = new DatagramSocket(port);
 
-                    while (true) {
-                        DatagramPacket datagramPacket = new DatagramPacket(receiveData, receiveData.length);
-                        datagramSocket.receive(datagramPacket);
-                        clientProcessingPool.submit(new ClientTask(datagramSocket, datagramPacket));
-                        datagramSocket.close();
+                        while (true) {
+                            DatagramPacket datagramPacket = new DatagramPacket(receiveData, receiveData.length);
+                            datagramSocket.receive(datagramPacket);
+                            clientProcessingPool.submit(new ClientTask(datagramSocket, datagramPacket));
+                        }
+                        //TODO graceful shutdown
+                    } catch (SocketException e) {
+                        LOGGER.error("SocketException in server thread", e);
+                    } catch (IOException e) {
+                        LOGGER.error("IOException in server thread", e);
                     }
-                    //TODO graceful shutdown
-                } catch (SocketException e) {
-                    LOGGER.error("SocketException in server thread", e);
-                } catch (IOException e) {
-                    LOGGER.error("IOException in server thread", e);
                 }
+            };
+        }
+
+        if (serverThread == null) {
+            LOGGER.info("Starting UDP Listener...");
+            serverThread = new Thread(serverTask);
+            serverThread.start();
+            LOGGER.info("UDP Listener started on port : {}", port);
+        } else {
+            if (!serverThread.isAlive()) {
+                LOGGER.info("Starting UDP Listener...");
+                serverThread.start();
+                LOGGER.info("UDP Listener started on port : {}", port);
             }
-        };
-        Thread serverThread = new Thread(serverTask);
-        serverThread.start();
-        LOGGER.info("UDP Listener started on port : {}", port);
+        }
+
     }
 
     @Override

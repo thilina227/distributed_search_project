@@ -25,6 +25,8 @@ public class TcpListener extends Listener {
 
     private static final int THREAD_POOL_SIZE = 10;
     private static Listener instance;
+    private static Runnable serverTask;
+    private static Thread serverThread;
 
     //Singleton
     private TcpListener() {
@@ -32,28 +34,40 @@ public class TcpListener extends Listener {
 
     @Override
     public void initListener(final int port) {
-        LOGGER.info("Starting TCP Listener...");
 
         final ExecutorService clientProcessingPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 
-        Runnable serverTask = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    ServerSocket serverSocket = new ServerSocket(port);
-                    while (true) {
-                        Socket clientSocket = serverSocket.accept();
-                        clientProcessingPool.submit(new ClientTask(clientSocket));
-                    }
+        if (serverTask == null) {
+            serverTask = new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        ServerSocket serverSocket = new ServerSocket(port);
+                        while (true) {
+                            Socket clientSocket = serverSocket.accept();
+                            clientProcessingPool.submit(new ClientTask(clientSocket));
+                        }
 
-                    //TODO graceful shutdown
-                } catch (IOException e) {
-                    LOGGER.error("IOException in server thread", e);
+                        //TODO graceful shutdown
+                    } catch (IOException e) {
+                        LOGGER.error("IOException in server thread", e);
+                    }
                 }
+            };
+        }
+
+        if (serverThread == null) {
+            LOGGER.info("Starting TCP Listener...");
+            serverThread = new Thread(serverTask);
+            serverThread.start();
+        } else {
+            if (!serverThread.isAlive()) {
+                LOGGER.info("Starting TCP Listener...");
+                serverThread.start();
             }
-        };
-        Thread serverThread = new Thread(serverTask);
-        serverThread.start();
+        }
+
+
         LOGGER.info("TCP Listener started on port : {}", port);
     }
 
