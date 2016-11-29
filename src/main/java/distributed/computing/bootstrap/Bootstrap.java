@@ -126,12 +126,12 @@ public class Bootstrap {
      * @param nodeCount   number of nodes in the network
      */
     private static PeerNode connectRandomChild(RegResponse regResponse, int nodeCount) {
-        PeerNode child = regResponse.getPeerNodes().get(new Random().nextInt(nodeCount));
+        PeerNode child = regResponse.getPeerNodes().get(new Random().nextInt(nodeCount - 1));
         if (Connect.connectWithPeer(child)) {
             regResponse.getPeerNodes().remove(child);//removing from te pool to avoid duplication
             return child;
         } else {
-            child = regResponse.getPeerNodes().get(new Random().nextInt(nodeCount));
+            child = regResponse.getPeerNodes().get(new Random().nextInt(nodeCount - 1));
             if (Connect.connectWithPeer(child)) {
                 regResponse.getPeerNodes().remove(child);//removing from te pool to avoid duplication
                 return child;
