@@ -50,6 +50,7 @@ public class UdpListener extends Listener {
                         DatagramPacket datagramPacket = new DatagramPacket(receiveData, receiveData.length);
                         datagramSocket.receive(datagramPacket);
                         clientProcessingPool.submit(new ClientTask(datagramSocket, datagramPacket));
+                        datagramSocket.close();
                     }
                     //TODO graceful shutdown
                 } catch (SocketException e) {
