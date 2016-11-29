@@ -16,6 +16,12 @@ public class MessageCache extends Thread{
 
     private static Map<String, Integer> messageCache = new ConcurrentHashMap<>();//thread safe map
 
+    private static MessageCache messageCacheInstance;
+
+    //Singleton
+    private MessageCache() {
+    }
+
     /**
      * Check a message id in cache
      * */
@@ -31,8 +37,10 @@ public class MessageCache extends Thread{
      * Init caching scheduler
      * */
     public static void initCachingScheduler() {
-        LOGGER.info("Starting message cache scheduler");
-        new MessageCache().start();
+        if  (!getInstance().isAlive()) {
+            LOGGER.info("Starting message cache scheduler");
+            getInstance().start();
+        }
     }
 
     @Override
@@ -55,4 +63,15 @@ public class MessageCache extends Thread{
         }
     }
 
+    /**
+     * Get instance of messageCache
+     *
+     * @return MessageCache instance
+     * */
+    public static MessageCache getInstance() {
+        if (messageCacheInstance == null) {
+            messageCacheInstance = new MessageCache();
+        }
+        return messageCacheInstance;
+    }
 }
