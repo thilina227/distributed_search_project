@@ -284,7 +284,7 @@ public class peerForm extends javax.swing.JFrame {
             i++;
         } 
         Runtime.getRuntime().addShutdownHook(new BootstrapShutdownHook());
-//        MessageCache.initCachingScheduler();//init caching scheduler
+        MessageCache.initCachingScheduler();//init caching scheduler
     }//GEN-LAST:event_bsRegButtonMouseClicked
 
     private void applyButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_applyButtonMouseClicked

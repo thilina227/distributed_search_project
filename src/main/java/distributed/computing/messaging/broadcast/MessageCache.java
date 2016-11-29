@@ -32,7 +32,7 @@ public class MessageCache extends Thread{
      * */
     public static void initCachingScheduler() {
         LOGGER.info("Starting message cache scheduler");
-        new MessageCache().run();
+        new MessageCache().start();
     }
 
     @Override
