@@ -15,6 +15,7 @@ public class PeerMessageUtils {
     private static final String DISCONNECT_RESPONSE_KEYWORD = "DISCONNECTOK";
     private static final String HEART_BEAT_RESPONSE_KEYWORD = "PINGOK";
     private static final String ERROR_RESPONSE_KEYWORD = "ERROR";
+    private static final String SEARCH_ACK_RESPONSE_KEYWORD = "SERACK";
 
     /**
      * Construct connectWithPeer message
@@ -74,8 +75,19 @@ public class PeerMessageUtils {
         return MessageUtils.prependLength(message);
     }
 
+    /**
+     * Construct disconnect response
+     * */
     public static String constructDisconnectResponse() {
         String message = DISCONNECT_RESPONSE_KEYWORD + " " + 0;
+        return MessageUtils.prependLength(message);
+    }
+
+    /**
+     * Construct search acknowledgement response
+     * */
+    public static String constructSearchAckResponse() {
+        String message = SEARCH_ACK_RESPONSE_KEYWORD + " " + 0;
         return MessageUtils.prependLength(message);
     }
 }

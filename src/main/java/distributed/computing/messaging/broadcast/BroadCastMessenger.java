@@ -32,17 +32,23 @@ public class BroadCastMessenger {
         } else {
             MessageCache.addCache(broadcastRequest.getId());
             for (PeerNode parent : NodeContext.getParents()) {
-                try {
-                    new UdpCommunicator().sendMessage(parent.getIp(), parent.getPort(), broadcastRequest.toString());
-                } catch (IOException e) {
-                    LOGGER.error("Could not send message to parent {}", parent);
+                //avoid sending back to predecessor
+                if (!parent.getUsername().equals(broadcastRequest.getPredecessor())) {
+                    try {
+                        new UdpCommunicator().sendMessage(parent.getIp(), parent.getPort(), broadcastRequest.toString());
+                    } catch (IOException e) {
+                        LOGGER.error("Could not send message to parent {}", parent);
+                    }
                 }
             }
             for (PeerNode child : NodeContext.getChildren()) {
-                try {
-                    new UdpCommunicator().sendMessage(child.getIp(), child.getPort(), broadcastRequest.toString());
-                } catch (IOException e) {
-                    LOGGER.error("Could not send message to parent {}", child);
+                //avoid sending back to predecessor
+                if (!child.getUsername().equals(broadcastRequest.getPredecessor())) {
+                    try {
+                        new UdpCommunicator().sendMessage(child.getIp(), child.getPort(), broadcastRequest.toString());
+                    } catch (IOException e) {
+                        LOGGER.error("Could not send message to child {}", child);
+                    }
                 }
             }
 

@@ -9,7 +9,7 @@ import java.util.UUID;
  */
 public class BroadcastRequest {
 
-    private static final String SEARCH_MESSAGE_FORMAT = "%s %s %d %s %d %d %s%s";
+    private static final String SEARCH_MESSAGE_FORMAT = "%s %s %d %s %d %d %s %s%s";
     private static final String DELIMITER = " ";
 
     private String id;
@@ -19,8 +19,10 @@ public class BroadcastRequest {
     private int sourcePort;
     private int hops;
     private int ttl;
+    private String predecessor;
 
-    public BroadcastRequest(String id, String message, String operation, String sourceIp, int sourcePort, int hops, int ttl) {
+
+    public BroadcastRequest(String id, String message, String operation, String sourceIp, int sourcePort, int hops, int ttl, String predecessor) {
         this.id = id;
         this.message = message;
         this.operation = operation;
@@ -28,9 +30,10 @@ public class BroadcastRequest {
         this.sourcePort = sourcePort;
         this.hops = hops;
         this.ttl = ttl;
+        this.predecessor = predecessor;
     }
 
-    public BroadcastRequest(String message, String operation, String sourceIp, int sourcePort, int hops, int ttl) {
+    public BroadcastRequest(String message, String operation, String sourceIp, int sourcePort, int hops, int ttl, String predecessor) {
         this.id = UUID.randomUUID().toString();
         this.message = message;
         this.operation = operation;
@@ -38,6 +41,7 @@ public class BroadcastRequest {
         this.sourcePort = sourcePort;
         this.hops = hops;
         this.ttl = ttl;
+        this.predecessor = predecessor;
     }
 
     public BroadcastRequest(String message) {
@@ -50,6 +54,7 @@ public class BroadcastRequest {
         this.hops = Integer.parseInt(chunks[5]);
         this.ttl = Integer.parseInt(chunks[6]);
         this.id = chunks[7];
+        this.predecessor = chunks[8];
     }
 
 
@@ -77,11 +82,19 @@ public class BroadcastRequest {
         this.operation = operation;
     }
 
+    public String getPredecessor() {
+        return predecessor;
+    }
+
+    public void setPredecessor(String predecessor) {
+        this.predecessor = predecessor;
+    }
+
     @Override
     public String toString() {
         //length SER sourceip sourceport message hops ttl messageId
         String message = String.format(SEARCH_MESSAGE_FORMAT, this.operation, this.sourceIp,
-                this.sourcePort, this.message, this.hops, this.ttl, this.id, System.lineSeparator());
+                this.sourcePort, this.message, this.hops, this.ttl, this.id, this.predecessor, System.lineSeparator());
         message = MessageUtils.prependLength(message);
         return message;
     }

@@ -4,6 +4,8 @@ import distributed.computing.config.NodeContext;
 import distributed.computing.domain.model.Operation;
 import distributed.computing.domain.model.PeerNode;
 import distributed.computing.messaging.PeerMessageUtils;
+import distributed.computing.messaging.broadcast.BroadCastMessenger;
+import distributed.computing.messaging.broadcast.message.BroadcastRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -47,6 +49,20 @@ public class MessageResolver {
                 NodeContext.addParent(parent);
                 LOGGER.info("Connected with parent: {}", parent);
                 return PeerMessageUtils.constructConnectResponse();
+            }
+
+            if (message.contains(String.valueOf(Operation.SER))) {
+                LOGGER.debug("broadcast request received");
+                BroadcastRequest broadcastRequest = new BroadcastRequest(message);
+                BroadCastMessenger broadCastMessenger = new BroadCastMessenger();
+                broadCastMessenger.broadcast(broadcastRequest);
+
+
+                //TODO search local files
+
+                //TODO broadcast to others
+
+                return PeerMessageUtils.constructSearchAckResponse();
             }
 
             //TODO implement other operations
