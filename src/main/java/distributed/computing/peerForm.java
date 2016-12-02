@@ -13,6 +13,7 @@ import distributed.computing.domain.model.PeerNode;
 import distributed.computing.listner.Listener;
 import distributed.computing.listner.UdpListener;
 import distributed.computing.messaging.broadcast.MessageCache;
+import distributed.computing.util.SearchUtil;
 import distributed.computing.util.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -296,7 +297,8 @@ public class peerForm extends javax.swing.JFrame {
     }//GEN-LAST:event_applyButtonMouseClicked
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
-        // TODO add your handling code here:
+        SearchUtil.search(keyWord.getText());
+
     }//GEN-LAST:event_searchButtonActionPerformed
 
     public void setSendMessage(String message){
