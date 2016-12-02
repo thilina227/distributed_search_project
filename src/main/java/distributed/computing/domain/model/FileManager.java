@@ -13,7 +13,7 @@ import java.util.*;
  */
 public class FileManager {
     
-    private final List<String> fileStorage = new ArrayList<>();
+    private final static List<String> fileStorage = Collections.synchronizedList(new ArrayList<String>());
     private Iterator<String> itr;
     
     public void addFile(String fileName){
