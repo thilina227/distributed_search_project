@@ -284,12 +284,12 @@ public class peerForm extends javax.swing.JFrame {
          
         try{
            int intBsPort = Integer.parseInt(bsPortStr);
-           if (!(intBsPort > 0 && intBsPort < 65535)) {
-                JOptionPane.showMessageDialog(rootPane, "Bootstrap Port should be a valid port number");
+           if (!(intBsPort >= 1024 && intBsPort <= 65535)) {
+                JOptionPane.showMessageDialog(rootPane, "Bootstrap Port should be a valid port number (1024 - 65535)");
                 valid = false;
            }
         } catch (NumberFormatException e){
-            JOptionPane.showMessageDialog(rootPane, "Bootstrap Port should be a valid port number");
+            JOptionPane.showMessageDialog(rootPane, "Bootstrap Port should be a valid port number (1024 - 65535)");
             valid = false;
         }
         
@@ -346,12 +346,12 @@ public class peerForm extends javax.swing.JFrame {
         
         try{
            int intPort = Integer.parseInt(nodePortStr);
-           if (!(intPort > 0 && intPort < 65535)) {
-                JOptionPane.showMessageDialog(rootPane, "Node port should be a valid port number");
+           if (!(intPort >= 1024 && intPort <= 65535)) {
+                JOptionPane.showMessageDialog(rootPane, "Node port should be a valid port number (1024 - 65535)");
                 valid = false;
            }
         } catch (NumberFormatException e){
-            JOptionPane.showMessageDialog(rootPane, "Node port should be a valid port number");
+            JOptionPane.showMessageDialog(rootPane, "Node port should be a valid port number (1024 - 65535)");
             valid = false;
         }
         if (valid) {
