@@ -26,6 +26,7 @@ public class BroadCastMessenger {
      * @return response
      */
     public void broadcast(BroadcastRequest broadcastRequest) {
+        String predecessorNode = broadcastRequest.getPredecessor().trim();
         if (MessageCache.isInCache(broadcastRequest.getId())) {
             //Do nothing
             LOGGER.debug("Discarding message {}", broadcastRequest.getId());
@@ -33,7 +34,8 @@ public class BroadCastMessenger {
             MessageCache.addCache(broadcastRequest.getId());
             for (PeerNode parent : NodeContext.getParents()) {
                 //avoid sending back to predecessor
-                if (!parent.getUsername().equals(broadcastRequest.getPredecessor())) {
+                String parentNode = parent.getUsername().trim();
+                if (!parentNode.equals(predecessorNode)) {
                     try {
                         new UdpCommunicator().sendMessage(parent.getIp(), parent.getPort(), broadcastRequest.toString());
                     } catch (IOException e) {
@@ -42,8 +44,9 @@ public class BroadCastMessenger {
                 }
             }
             for (PeerNode child : NodeContext.getChildren()) {
+                String childNode = child.getUsername().trim();
                 //avoid sending back to predecessor
-                if (!child.getUsername().equals(broadcastRequest.getPredecessor())) {
+                if (!childNode.equalsIgnoreCase(predecessorNode)) {
                     try {
                         new UdpCommunicator().sendMessage(child.getIp(), child.getPort(), broadcastRequest.toString());
                     } catch (IOException e) {

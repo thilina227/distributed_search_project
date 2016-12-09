@@ -9,7 +9,7 @@ import java.util.UUID;
  */
 public class BroadcastRequest {
 
-    private static final String SEARCH_MESSAGE_FORMAT = "%s %s %d %s %d %d %s %s%s";
+    private static final String SEARCH_MESSAGE_FORMAT = "%s %s %d %s %d %d %s %s";
     private static final String DELIMITER = " ";
 
     private String id;
@@ -94,7 +94,7 @@ public class BroadcastRequest {
     public String toString() {
         //length SER sourceip sourceport message hops ttl messageId
         String message = String.format(SEARCH_MESSAGE_FORMAT, this.operation, this.sourceIp,
-                this.sourcePort, this.message, this.hops, this.ttl, this.id, this.predecessor, System.lineSeparator());
+                this.sourcePort, this.message, this.hops, this.ttl, this.id, this.predecessor);
         message = MessageUtils.prependLength(message);
         return message;
     }

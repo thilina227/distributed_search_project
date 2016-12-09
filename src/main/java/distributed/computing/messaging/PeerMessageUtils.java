@@ -10,7 +10,7 @@ import distributed.computing.util.MessageUtils;
  */
 public class PeerMessageUtils {
 
-    private static final String CONNECT_MESSAGE_FORMAT = "%s %s %d %s%s";
+    private static final String CONNECT_MESSAGE_FORMAT = "%s %s %d %s";
     private static final String CONNECT_RESPONSE_KEYWORD = "CONNECTOK";
     private static final String DISCONNECT_RESPONSE_KEYWORD = "DISCONNECTOK";
     private static final String HEART_BEAT_RESPONSE_KEYWORD = "PINGOK";
@@ -25,7 +25,7 @@ public class PeerMessageUtils {
      * @return String message
      */
     public static String constructConnectMessage(PeerNode peerNode) {
-        String message = String.format(CONNECT_MESSAGE_FORMAT, Operation.CONNECT, peerNode.getIp(), peerNode.getPort(), NodeContext.getUserName(), System.lineSeparator());
+        String message = String.format(CONNECT_MESSAGE_FORMAT, Operation.CONNECT, peerNode.getIp(), peerNode.getPort(), NodeContext.getUserName());
         message = MessageUtils.prependLength(message);
         return message;
     }
@@ -38,7 +38,7 @@ public class PeerMessageUtils {
      * @return String message
      */
     public static String constructDisconnectMessage(PeerNode peerNode) {
-        String message = String.format(CONNECT_MESSAGE_FORMAT, Operation.DISCONNECT, peerNode.getIp(), peerNode.getPort(), NodeContext.getUserName(), System.lineSeparator());
+        String message = String.format(CONNECT_MESSAGE_FORMAT, Operation.DISCONNECT, peerNode.getIp(), peerNode.getPort(), NodeContext.getUserName());
         message = MessageUtils.prependLength(message);
         return message;
     }
