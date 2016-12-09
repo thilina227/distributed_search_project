@@ -29,12 +29,12 @@ public class Main {
 //            Runtime.getRuntime().addShutdownHook(new BootstrapShutdownHook());
 //            MessageCache.initCachingScheduler();//init caching scheduler
 //        }
-        peerForm form = new peerForm();
+        PeerForm form = new PeerForm();
         form.setVisible(true);
         LOGGER.debug("Initializing...");
 
         //TODO get server details from form
-//        peerForm form = new peerForm();
+//        PeerForm form = new PeerForm();
 //        form.setVisible(true);
         //startListeners();
         //Bootstrap.register();//registering with bootstrap server

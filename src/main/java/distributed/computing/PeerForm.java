@@ -10,6 +10,7 @@ import distributed.computing.bootstrap.Bootstrap;
 import distributed.computing.bootstrap.BootstrapShutdownHook;
 import distributed.computing.config.BootstrapServerConfig;
 import distributed.computing.config.NodeContext;
+import distributed.computing.domain.model.FileManager;
 import distributed.computing.domain.model.PeerNode;
 import distributed.computing.listner.Listener;
 import distributed.computing.listner.UdpListener;
@@ -17,6 +18,8 @@ import distributed.computing.messaging.broadcast.MessageCache;
 import distributed.computing.util.SearchUtil;
 import distributed.computing.util.Utils;
 import javax.swing.JOptionPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,15 +27,15 @@ import org.apache.logging.log4j.Logger;
  *
  * @author yasitham
  */
-public class peerForm extends javax.swing.JFrame {
+public class PeerForm extends javax.swing.JFrame {
 
-    private static final Logger LOGGER = LogManager.getLogger(peerForm.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(PeerForm.class.getName());
 
 
     /**
-     * Creates new form peerForm
+     * Creates new form PeerForm
      */
-    public peerForm() {
+    public PeerForm() {
         initComponents();
         JTextAreaAppender.addTextArea(this.logTxtArea);
     }
@@ -72,6 +75,7 @@ public class peerForm extends javax.swing.JFrame {
         peerName1 = new javax.swing.JLabel();
         peerName2 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Peer Properties");
@@ -135,6 +139,11 @@ public class peerForm extends javax.swing.JFrame {
         txtLocalFileNames.setEditable(false);
         txtLocalFileNames.setColumns(20);
         txtLocalFileNames.setRows(5);
+        txtLocalFileNames.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                txtLocalFileNamesCaretUpdate(evt);
+            }
+        });
         jScrollPane2.setViewportView(txtLocalFileNames);
 
         logTxtArea.setEditable(false);
@@ -152,6 +161,13 @@ public class peerForm extends javax.swing.JFrame {
         jLabel9.setText("File names");
 
         jLabel10.setText("Log");
+
+        jButton1.setText("Clear files");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -186,7 +202,10 @@ public class peerForm extends javax.swing.JFrame {
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(bsRegButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(applyButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addComponent(jLabel9)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jLabel9)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(layout.createSequentialGroup()
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addGroup(layout.createSequentialGroup()
@@ -250,7 +269,9 @@ public class peerForm extends javax.swing.JFrame {
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel8))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel9)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(jButton1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(25, 25, 25)
@@ -371,7 +392,29 @@ public class peerForm extends javax.swing.JFrame {
         SearchUtil.search(keyWord.getText());
 
     }//GEN-LAST:event_searchButtonActionPerformed
+
+    private void txtLocalFileNamesCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txtLocalFileNamesCaretUpdate
+        fileNamesUpdate();
+    }//GEN-LAST:event_txtLocalFileNamesCaretUpdate
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        txtLocalFileNames.setText("");
+        FileManager.clear();
+        LOGGER.debug("cear files");
+    }//GEN-LAST:event_jButton1ActionPerformed
    
+    public static void addSearchResult(String fileName, String location) {
+        synchronized(resultArea) {
+            resultArea.setText(resultArea.getText() + location + " : " + fileName + "\n");
+        }        
+    }
+    
+    public static void clearSearchResult() {
+        synchronized(resultArea) {
+            resultArea.setText("");
+        }
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -389,20 +432,20 @@ public class peerForm extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(peerForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PeerForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(peerForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PeerForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(peerForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PeerForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(peerForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PeerForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new peerForm().setVisible(true);
+                new PeerForm().setVisible(true);
             }
         });
     }
@@ -414,6 +457,7 @@ public class peerForm extends javax.swing.JFrame {
     private javax.swing.JTextField bsIP;
     private javax.swing.JTextField bsPort;
     private javax.swing.JButton bsRegButton;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
@@ -431,10 +475,31 @@ public class peerForm extends javax.swing.JFrame {
     private javax.swing.JTextArea logTxtArea;
     private javax.swing.JLabel peerName1;
     private javax.swing.JLabel peerName2;
-    private javax.swing.JTextArea resultArea;
+    private static javax.swing.JTextArea resultArea;
     private javax.swing.JButton searchButton;
     private javax.swing.JTextArea txtLocalFileNames;
     // End of variables declaration//GEN-END:variables
+
+
+    public void fileNamesUpdate() {
+        
+        String fileNames = txtLocalFileNames.getText();
+        if (!fileNames.isEmpty()) {
+            FileManager.clear();
+            if (fileNames.trim().contains("\n")) {
+                String fileNamesArr[] = fileNames.split("\n");
+                for(String fileName : fileNamesArr) {
+                    FileManager.addFile(fileName);
+                    LOGGER.debug("local file: {}", fileName.trim());
+                }
+            } else {
+                FileManager.addFile(fileNames);
+                LOGGER.debug("local file: {}", fileNames.trim());
+            }
+            LOGGER.debug("Files updated");
+        }
+        
+    }
 
   
 }

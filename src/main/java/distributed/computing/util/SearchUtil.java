@@ -1,5 +1,6 @@
 package distributed.computing.util;
 
+import distributed.computing.PeerForm;
 import distributed.computing.config.NodeContext;
 import distributed.computing.domain.model.FileManager;
 import distributed.computing.domain.model.Operation;
@@ -50,9 +51,13 @@ public class SearchUtil {
     }
 
     public static final void doLocalSearch(String keyword) {
-        FileManager fileManager = new FileManager();
-        List<String> files =  fileManager.searchFile(keyword);
-        //TODO view local search results
+        List<String> files =  FileManager.searchFile(keyword);
+
+        if (!files.isEmpty()) {
+            for (String file : files) {
+                PeerForm.addSearchResult(file, "local");
+            }
+        }
     }
 
 }

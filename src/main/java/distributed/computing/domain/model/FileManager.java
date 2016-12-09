@@ -14,19 +14,18 @@ import java.util.*;
 public class FileManager {
     
     private final static List<String> fileStorage = Collections.synchronizedList(new ArrayList<String>());
-    private Iterator<String> itr;
-    
-    public void addFile(String fileName){
+
+    public static void addFile(String fileName){
         fileStorage.add(fileName);
     }
     
-    public void removeFile(String fileName){
+    public  static void removeFile(String fileName){
         fileStorage.remove(fileName);
     }
     
-    public List<String> searchFile(String keyword){
+    public static List<String> searchFile(String keyword){
         List<String> searchResult = new ArrayList<>();
-        itr = fileStorage.iterator();
+        Iterator<String> itr = fileStorage.iterator();
          
         for (String key : keyword.split(" ")){
             while(itr.hasNext()){
@@ -39,5 +38,9 @@ public class FileManager {
             }
         }
         return searchResult;
+    }
+
+    public static void clear() {
+        fileStorage.clear();
     }
 }
