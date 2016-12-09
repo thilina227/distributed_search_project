@@ -32,7 +32,7 @@ public class Bootstrap {
      *
      * @return boolean success/fail
      */
-    public static boolean register(peerForm form) {
+    public static boolean register() {
         LOGGER.info("Registering with Bootstrap server");
         TcpCommunicator tcpCommunicator = new TcpCommunicator();
         try {
@@ -40,8 +40,8 @@ public class Bootstrap {
             String response = tcpCommunicator.sendMessage(BootstrapServerConfig.getHost(),
                     BootstrapServerConfig.getPort(), message);
             
-            form.setSendMessage(message);
-            form.setResponseMessage(response);
+//            form.setSendMessage(message);
+//            form.setResponseMessage(response);
             
             RegResponse regResponse = new RegResponse(response);
             if (regResponse.getStatusCode() < ErrorCodeResolver.OK_MIN_FAIL_RANGE) {

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="INFO">
+<Configuration status="DEBUG" packages="distributed.computing.appender">
     <Appenders>
+        <JTextAreaAppender name="jtextarea-log" maxLines="100">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %c{1.} - %msg%n"/>
+        </JTextAreaAppender>
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %c{1.} - %msg%n" />
         </Console>
@@ -12,6 +15,7 @@
         <Root level="debug">
             <AppenderRef ref="Console"/>
             <AppenderRef ref="LogFile"/>
+            <appenderRef ref="jtextarea-log"/>
         </Root>
     </Loggers>
 </Configuration>

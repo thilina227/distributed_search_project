@@ -5,6 +5,7 @@
  */
 package distributed.computing;
 
+import distributed.computing.appender.JTextAreaAppender;
 import distributed.computing.bootstrap.Bootstrap;
 import distributed.computing.bootstrap.BootstrapShutdownHook;
 import distributed.computing.config.BootstrapServerConfig;
@@ -15,6 +16,7 @@ import distributed.computing.listner.UdpListener;
 import distributed.computing.messaging.broadcast.MessageCache;
 import distributed.computing.util.SearchUtil;
 import distributed.computing.util.Utils;
+import javax.swing.JOptionPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -32,6 +34,7 @@ public class peerForm extends javax.swing.JFrame {
      */
     public peerForm() {
         initComponents();
+        JTextAreaAppender.addTextArea(this.logTxtArea);
     }
 
     /**
@@ -62,13 +65,13 @@ public class peerForm extends javax.swing.JFrame {
         resultArea = new javax.swing.JTextArea();
         jLabel8 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        sendArea = new javax.swing.JTextArea();
+        txtLocalFileNames = new javax.swing.JTextArea();
         jScrollPane3 = new javax.swing.JScrollPane();
-        receiveArea = new javax.swing.JTextArea();
+        logTxtArea = new javax.swing.JTextArea();
         jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
         peerName1 = new javax.swing.JLabel();
         peerName2 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Peer Properties");
@@ -76,6 +79,7 @@ public class peerForm extends javax.swing.JFrame {
 
         jLabel1.setText("BS IP:");
 
+        bsIP.setEnabled(false);
         bsIP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bsIPActionPerformed(evt);
@@ -84,14 +88,11 @@ public class peerForm extends javax.swing.JFrame {
 
         jLabel2.setText("BS Port:");
 
+        bsPort.setEnabled(false);
+
         jLabel3.setText("Node Port:");
 
         applyButton.setText("Apply");
-        applyButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                applyButtonMouseClicked(evt);
-            }
-        });
         applyButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 applyButtonActionPerformed(evt);
@@ -100,12 +101,8 @@ public class peerForm extends javax.swing.JFrame {
 
         jLabel4.setText("Node Name:");
 
-        bsRegButton.setText("BS Register");
-        bsRegButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                bsRegButtonMouseClicked(evt);
-            }
-        });
+        bsRegButton.setText("Register");
+        bsRegButton.setEnabled(false);
         bsRegButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bsRegButtonActionPerformed(evt);
@@ -118,30 +115,43 @@ public class peerForm extends javax.swing.JFrame {
 
         jLabel7.setText("Key Word:");
 
+        keyWord.setEnabled(false);
+
         searchButton.setText("Search");
+        searchButton.setEnabled(false);
         searchButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 searchButtonActionPerformed(evt);
             }
         });
 
+        resultArea.setEditable(false);
         resultArea.setColumns(20);
         resultArea.setRows(5);
         jScrollPane1.setViewportView(resultArea);
 
         jLabel8.setText("Result:");
 
-        sendArea.setColumns(20);
-        sendArea.setRows(5);
-        jScrollPane2.setViewportView(sendArea);
+        txtLocalFileNames.setEditable(false);
+        txtLocalFileNames.setColumns(20);
+        txtLocalFileNames.setRows(5);
+        jScrollPane2.setViewportView(txtLocalFileNames);
 
-        receiveArea.setColumns(20);
-        receiveArea.setRows(5);
-        jScrollPane3.setViewportView(receiveArea);
+        logTxtArea.setEditable(false);
+        logTxtArea.setBackground(new java.awt.Color(1, 1, 1));
+        logTxtArea.setColumns(20);
+        logTxtArea.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
+        logTxtArea.setForeground(new java.awt.Color(82, 181, 97));
+        logTxtArea.setRows(5);
+        logTxtArea.setLineWrap(true);
+        logTxtArea.setWrapStyleWord(true);
+        logTxtArea.setEditable (false);
+        jScrollPane3.setViewportView(logTxtArea);
+        jScrollPane3.setVisible(true);
 
-        jLabel9.setText("Send");
+        jLabel9.setText("File names");
 
-        jLabel10.setText("Receive");
+        jLabel10.setText("Log");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -149,56 +159,57 @@ public class peerForm extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(25, 25, 25)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane3)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel10)
-                    .addComponent(jScrollPane2)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel1))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(NodeName, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
-                            .addComponent(bsIP))
-                        .addGap(25, 25, 25)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(NodePort, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addGap(18, 18, 18)
-                                .addComponent(bsPort, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(27, 27, 27)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(bsRegButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(applyButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(jLabel9)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel8)
-                                .addGap(27, 27, 27)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(keyWord, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(25, 25, 25)
-                                .addComponent(searchButton)))
-                        .addGap(28, 28, 28)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(peerName2))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel5)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(peerName1)))))
-                .addContainerGap(19, Short.MAX_VALUE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jScrollPane3)
+                        .addComponent(jScrollPane2)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel4)
+                                .addComponent(jLabel1))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(NodeName, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
+                                .addComponent(bsIP))
+                            .addGap(25, 25, 25)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabel3)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(NodePort, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabel2)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(bsPort, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGap(27, 27, 27)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(bsRegButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(applyButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jLabel9)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabel8)
+                                    .addGap(27, 27, 27)
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addComponent(jLabel7)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(keyWord, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(25, 25, 25)
+                                    .addComponent(searchButton)))
+                            .addGap(28, 28, 28)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabel6)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(peerName2))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabel5)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(peerName1))))))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -242,11 +253,11 @@ public class peerForm extends javax.swing.JFrame {
                 .addComponent(jLabel9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(25, 25, 25)
                 .addComponent(jLabel10)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 19, Short.MAX_VALUE))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -257,58 +268,110 @@ public class peerForm extends javax.swing.JFrame {
     }//GEN-LAST:event_bsIPActionPerformed
 
     private void bsRegButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bsRegButtonActionPerformed
-        // TODO add your handling code here:
+        String bsIpStr = bsIP.getText();
+        String bsPortStr = bsPort.getText();
+        
+        boolean valid = true;
+        if (bsIpStr.isEmpty()) {
+            JOptionPane.showMessageDialog(rootPane, "Bootstrap IP cannot be empty");
+            valid = false;
+        }
+        
+        if (bsPortStr.isEmpty()) {
+            JOptionPane.showMessageDialog(rootPane, "Bootstrap Port cannot be empty");
+            valid = false;
+        }
+         
+        try{
+           int intBsPort = Integer.parseInt(bsPortStr);
+           if (!(intBsPort > 0 && intBsPort < 65535)) {
+                JOptionPane.showMessageDialog(rootPane, "Bootstrap Port should be a valid port number");
+                valid = false;
+           }
+        } catch (NumberFormatException e){
+            JOptionPane.showMessageDialog(rootPane, "Bootstrap Port should be a valid port number");
+            valid = false;
+        }
+        
+        if (valid) {
+            BootstrapServerConfig.setHost(bsIP.getText());
+            BootstrapServerConfig.setPort(Integer.parseInt(bsPort.getText()));
+            LOGGER.info("BS IP: " + bsIP.getText() + ", BS Port: " +  bsPort.getText());
+
+            Listener udpListener = UdpListener.getInstance();
+            udpListener.initListener(NodeContext.getPort());
+
+            Bootstrap.register();
+            int i = 0;
+            for (PeerNode node : NodeContext.getChildren()){
+                if(i == 0)
+                    peerName1.setText(node.getUsername());
+                else if (i == 1){
+                    peerName2.setText(node.getUsername());
+                }
+                i++;
+            } 
+            Runtime.getRuntime().addShutdownHook(new BootstrapShutdownHook());
+            MessageCache.initCachingScheduler();//init caching scheduler
+            
+            keyWord.setEnabled(true);
+            searchButton.setEnabled(true);
+            resultArea.setEnabled(true);
+            txtLocalFileNames.setEnabled(true);
+            txtLocalFileNames.setEditable(valid);
+        }
+        
+        
     }//GEN-LAST:event_bsRegButtonActionPerformed
 
     private void applyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyButtonActionPerformed
-        // TODO add your handling code here:
+        String nodePortStr = NodePort.getText();
+        String nodeNameStr = NodeName.getText();
+        
+        boolean valid = true;
+        if (nodeNameStr.isEmpty()) {
+            JOptionPane.showMessageDialog(rootPane, "Node name cannot be empty");
+            valid = false;
+        }
+        
+        if (nodeNameStr.contains(" ")){
+            JOptionPane.showMessageDialog(rootPane, "Node name should be a single word");
+            valid = false;
+        }
+        
+        if (nodePortStr.isEmpty()) {
+            JOptionPane.showMessageDialog(rootPane, "Node port cannot be empty");
+            valid = false;
+        }
+        
+        try{
+           int intPort = Integer.parseInt(nodePortStr);
+           if (!(intPort > 0 && intPort < 65535)) {
+                JOptionPane.showMessageDialog(rootPane, "Node port should be a valid port number");
+                valid = false;
+           }
+        } catch (NumberFormatException e){
+            JOptionPane.showMessageDialog(rootPane, "Node port should be a valid port number");
+            valid = false;
+        }
+        if (valid) {
+            NodeContext.setIp(Utils.getIP());
+            NodeContext.setPort(Integer.parseInt(NodePort.getText()));
+            NodeContext.setUserName(NodeName.getText()); 
+            LOGGER.info("Node Name: "+ NodeName.getText() + ", Node IP: "+  Utils.getIP()+", Node Port:"+ NodePort.getText());
+            bsIP.setEnabled(true);
+            bsPort.setEnabled(true);
+            bsRegButton.setEnabled(true);
+        }
+        
+        
     }//GEN-LAST:event_applyButtonActionPerformed
-
-    private void bsRegButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bsRegButtonMouseClicked
-        // TODO add your handling code here:
-        BootstrapServerConfig.setHost(bsIP.getText());
-        BootstrapServerConfig.setPort(Integer.parseInt(bsPort.getText()));
-        System.out.println("BS IP: " + bsIP.getText() + ", BS Port: " +  bsPort.getText());
-        LOGGER.info("******************Starting client app!*******************");
-        
-        Listener udpListener = UdpListener.getInstance();
-        udpListener.initListener(NodeContext.getPort());
-        
-        Bootstrap.register(this);
-        int i = 0;
-        for (PeerNode node : NodeContext.getChildren()){
-            if(i == 0)
-                peerName1.setText(node.getUsername());
-            else if (i == 1){
-                peerName2.setText(node.getUsername());
-            }
-            i++;
-        } 
-        Runtime.getRuntime().addShutdownHook(new BootstrapShutdownHook());
-        MessageCache.initCachingScheduler();//init caching scheduler
-    }//GEN-LAST:event_bsRegButtonMouseClicked
-
-    private void applyButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_applyButtonMouseClicked
-        NodeContext.setIp(Utils.getIP());
-        NodeContext.setPort(Integer.parseInt(NodePort.getText()));
-        NodeContext.setUserName(NodeName.getText()); 
-        System.out.println("Node Name: "+ NodeName.getText() + ", Node IP: "+  Utils.getIP()+", Node Port:"+ NodePort.getText());
-// TODO add your handling code here:
-    }//GEN-LAST:event_applyButtonMouseClicked
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
         SearchUtil.search(keyWord.getText());
 
     }//GEN-LAST:event_searchButtonActionPerformed
-
-    public void setSendMessage(String message){
-        sendArea.append(message);
-    }
-    
-    public void setResponseMessage(String message){
-        receiveArea.append(message);
-    }
-    
+   
     /**
      * @param args the command line arguments
      */
@@ -365,12 +428,12 @@ public class peerForm extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTextField keyWord;
+    private javax.swing.JTextArea logTxtArea;
     private javax.swing.JLabel peerName1;
     private javax.swing.JLabel peerName2;
-    private javax.swing.JTextArea receiveArea;
     private javax.swing.JTextArea resultArea;
     private javax.swing.JButton searchButton;
-    private javax.swing.JTextArea sendArea;
+    private javax.swing.JTextArea txtLocalFileNames;
     // End of variables declaration//GEN-END:variables
 
   

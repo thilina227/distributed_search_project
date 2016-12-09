@@ -31,6 +31,7 @@ public class Main {
 //        }
         peerForm form = new peerForm();
         form.setVisible(true);
+        LOGGER.debug("Initializing...");
 
         //TODO get server details from form
 //        peerForm form = new peerForm();

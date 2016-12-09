@@ -8,7 +8,6 @@ import distributed.computing.messaging.broadcast.message.BroadcastRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.xml.soap.Node;
 import java.util.List;
 
 /**
@@ -27,16 +26,16 @@ public class SearchUtil {
         if (searchTerm.contains(SEARCH_DELIMITER)) {
             String[] kewords = searchTerm.split(SEARCH_DELIMITER);
             for (String keyword : kewords) {
-                doSearch(keyword);
+                initiateSearch(keyword);
 
             }
         } else {
-            doSearch(searchTerm);
+            initiateSearch(searchTerm);
         }
 
     }
 
-    private static void doSearch(String searchTerm) {
+    private static void initiateSearch(String searchTerm) {
         LOGGER.debug("searching for {}", searchTerm);
 
         //do local search
