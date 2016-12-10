@@ -13,13 +13,13 @@ import java.util.*;
  */
 public class FileManager {
     
-    private final static List<String> fileStorage = Collections.synchronizedList(new ArrayList<String>());
+    private static List<String> fileStorage = Collections.synchronizedList(new ArrayList<String>());
 
     public static void addFile(String fileName){
         fileStorage.add(fileName);
     }
     
-    public  static void removeFile(String fileName){
+    public static void removeFile(String fileName){
         fileStorage.remove(fileName);
     }
     

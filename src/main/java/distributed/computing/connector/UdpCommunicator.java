@@ -10,11 +10,11 @@ import java.net.*;
  */
 public class UdpCommunicator implements Communicator{
 
-    private byte[] sendData = new byte[1024];
-    private byte[] receiveData = new byte[1024];
 
     @Override
     public String sendMessage(String host, int port, String message) throws IOException {
+        byte[] sendData = new byte[1024];
+        byte[] receiveData = new byte[1024];
         DatagramSocket clientSocket = new DatagramSocket();
         InetAddress IPAddress = InetAddress.getByName(host);
         sendData = message.getBytes();

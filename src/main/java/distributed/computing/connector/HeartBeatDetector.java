@@ -16,7 +16,7 @@ public class HeartBeatDetector extends Thread {
 
     private static final Logger LOGGER = LogManager.getLogger(HeartBeatDetector.class.getName());
 
-    private static final int HEART_BEAT_INTERVAL = 5000;
+    private static final int HEART_BEAT_INTERVAL = 30000;
     private static final String HEART_BEAT_RESPONSE_KEYWORD = "PINGOK";
 
     @Override

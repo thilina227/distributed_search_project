@@ -1,14 +1,12 @@
 package distributed.computing.listner;
 
+import distributed.computing.config.NodeContext;
 import distributed.computing.util.MessageResolver;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
+import java.net.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -27,8 +25,6 @@ public class UdpListener extends Listener {
     private static Listener instance;
 
     private int port;
-    private byte[] receiveData = new byte[1024];
-    private byte[] sendData = new byte[1024];
 
     private static Runnable serverTask;
     private static Thread serverThread;
@@ -51,6 +47,8 @@ public class UdpListener extends Listener {
                         DatagramSocket datagramSocket = new DatagramSocket(port);
 
                         while (true) {
+                            byte[] receiveData = new byte[4096];
+                            byte[] sendData = new byte[4096];
                             DatagramPacket datagramPacket = new DatagramPacket(receiveData, receiveData.length);
                             datagramSocket.receive(datagramPacket);
                             clientProcessingPool.submit(new ClientTask(datagramSocket, datagramPacket));
@@ -111,6 +109,8 @@ public class UdpListener extends Listener {
     private class ClientTask implements Runnable {
         private final DatagramSocket clientSocket;
         private final DatagramPacket datagramPacket;
+        private byte[] receiveData = new byte[4096];
+        private byte[] sendData = new byte[4096];
 
         private ClientTask(DatagramSocket clientSocket, DatagramPacket datagramPacket) {
             this.clientSocket = clientSocket;
