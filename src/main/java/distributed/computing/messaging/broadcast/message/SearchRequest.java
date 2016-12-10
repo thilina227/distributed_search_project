@@ -7,7 +7,7 @@ import java.util.UUID;
 /**
  * Created by dev on 11/26/16.
  */
-public class BroadcastRequest {
+public class SearchRequest {
 
     private static final String SEARCH_MESSAGE_FORMAT = "%s %s %d %s %d %d %s %s";
     private static final String DELIMITER = " ";
@@ -22,7 +22,7 @@ public class BroadcastRequest {
     private String predecessor;
 
 
-    public BroadcastRequest(String id, String message, String operation, String sourceIp, int sourcePort, int hops, int ttl, String predecessor) {
+    public SearchRequest(String id, String message, String operation, String sourceIp, int sourcePort, int hops, int ttl, String predecessor) {
         this.id = id;
         this.message = message;
         this.operation = operation;
@@ -33,7 +33,7 @@ public class BroadcastRequest {
         this.predecessor = predecessor;
     }
 
-    public BroadcastRequest(String message, String operation, String sourceIp, int sourcePort, int hops, int ttl, String predecessor) {
+    public SearchRequest(String message, String operation, String sourceIp, int sourcePort, int hops, int ttl, String predecessor) {
         this.id = UUID.randomUUID().toString();
         this.message = message;
         this.operation = operation;
@@ -44,7 +44,7 @@ public class BroadcastRequest {
         this.predecessor = predecessor;
     }
 
-    public BroadcastRequest(String message) {
+    public SearchRequest(String message) {
         //length SER sourceip sourceport message hops ttl messageId
         String chunks[] = message.split(DELIMITER);
         this.operation = chunks[1];
@@ -88,6 +88,38 @@ public class BroadcastRequest {
 
     public void setPredecessor(String predecessor) {
         this.predecessor = predecessor;
+    }
+
+    public String getSourceIp() {
+        return sourceIp;
+    }
+
+    public void setSourceIp(String sourceIp) {
+        this.sourceIp = sourceIp;
+    }
+
+    public int getSourcePort() {
+        return sourcePort;
+    }
+
+    public void setSourcePort(int sourcePort) {
+        this.sourcePort = sourcePort;
+    }
+
+    public int getHops() {
+        return hops;
+    }
+
+    public void setHops(int hops) {
+        this.hops = hops;
+    }
+
+    public int getTtl() {
+        return ttl;
+    }
+
+    public void setTtl(int ttl) {
+        this.ttl = ttl;
     }
 
     @Override

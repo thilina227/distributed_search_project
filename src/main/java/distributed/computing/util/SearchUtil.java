@@ -2,13 +2,16 @@ package distributed.computing.util;
 
 import distributed.computing.PeerForm;
 import distributed.computing.config.NodeContext;
+import distributed.computing.connector.UdpCommunicator;
 import distributed.computing.domain.model.FileManager;
 import distributed.computing.domain.model.Operation;
+import distributed.computing.messaging.PeerMessageUtils;
 import distributed.computing.messaging.broadcast.BroadCastMessenger;
-import distributed.computing.messaging.broadcast.message.BroadcastRequest;
+import distributed.computing.messaging.broadcast.message.SearchRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -44,13 +47,13 @@ public class SearchUtil {
 
         //create a broadcast search request
         BroadCastMessenger broadCastMessenger = new BroadCastMessenger();
-        BroadcastRequest broadcastRequest = new BroadcastRequest(searchTerm, String.valueOf(Operation.SER), NodeContext.getIp(),
+        SearchRequest searchRequest = new SearchRequest(searchTerm, String.valueOf(Operation.SER), NodeContext.getIp(),
                 NodeContext.getPort(), 1, TTL, NodeContext.getUserName());
-        broadCastMessenger.broadcast(broadcastRequest);
+        broadCastMessenger.broadcast(searchRequest);
 
     }
 
-    public static final void doLocalSearch(String keyword) {
+    public static void doLocalSearch(String keyword) {
         List<String> files =  FileManager.searchFile(keyword);
 
         if (!files.isEmpty()) {
@@ -58,6 +61,31 @@ public class SearchUtil {
                 PeerForm.addSearchResult(file, "local");
             }
         }
+    }
+
+
+
+    /**
+     * Search local files and send the results back to the source node
+     * */
+    public static void searchReturnAndBroadcast(SearchRequest searchRequest) {
+        String keyword = searchRequest.getMessage();
+        List<String> files = FileManager.searchFile(keyword);
+
+        if (!files.isEmpty()) {
+            for (String filename: files) {
+                String message = PeerMessageUtils.constructSearchResultRequest(filename, searchRequest.getId());
+                try {
+                    new UdpCommunicator().sendMessage(searchRequest.getSourceIp(), searchRequest.getSourcePort(), message);
+                } catch (IOException e) {
+                    LOGGER.error("Failed sending search result", e);
+                }
+            }
+        }
+
+        //broadcast search request to neighbors
+        BroadCastMessenger broadCastMessenger = new BroadCastMessenger();
+        broadCastMessenger.broadcast(searchRequest);
     }
 
 }

@@ -3,7 +3,7 @@ package distributed.computing.messaging.broadcast;
 import distributed.computing.config.NodeContext;
 import distributed.computing.connector.UdpCommunicator;
 import distributed.computing.domain.model.PeerNode;
-import distributed.computing.messaging.broadcast.message.BroadcastRequest;
+import distributed.computing.messaging.broadcast.message.SearchRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,22 +22,24 @@ public class BroadCastMessenger {
     /**
      * Broadcast message to network
      *
-     * @param broadcastRequest broadcast message
+     * @param searchRequest broadcast message
      * @return response
      */
-    public void broadcast(BroadcastRequest broadcastRequest) {
-        String predecessorNode = broadcastRequest.getPredecessor().trim();
-        if (MessageCache.isInCache(broadcastRequest.getId())) {
+    public void broadcast(SearchRequest searchRequest) {
+        String predecessorNode = searchRequest.getPredecessor().trim();
+        if (MessageCache.isInCache(searchRequest.getId())) {
             //Do nothing
-            LOGGER.debug("Discarding message {}", broadcastRequest.getId());
+            LOGGER.debug("Discarding message {}", searchRequest.getId());
         } else {
-            MessageCache.addCache(broadcastRequest.getId());
+            MessageCache.addCache(searchRequest.getId());
             for (PeerNode parent : NodeContext.getParents()) {
                 //avoid sending back to predecessor
                 String parentNode = parent.getUsername().trim();
                 if (!parentNode.equals(predecessorNode)) {
                     try {
-                        new UdpCommunicator().sendMessage(parent.getIp(), parent.getPort(), broadcastRequest.toString());
+                        searchRequest.setPredecessor(NodeContext.getUserName());
+                        searchRequest.setHops(searchRequest.getHops() + 1);
+                        new UdpCommunicator().sendMessage(parent.getIp(), parent.getPort(), searchRequest.toString());
                     } catch (IOException e) {
                         LOGGER.error("Could not send message to parent {}", parent);
                     }
@@ -48,7 +50,9 @@ public class BroadCastMessenger {
                 //avoid sending back to predecessor
                 if (!childNode.equalsIgnoreCase(predecessorNode)) {
                     try {
-                        new UdpCommunicator().sendMessage(child.getIp(), child.getPort(), broadcastRequest.toString());
+                        searchRequest.setHops(searchRequest.getHops() + 1);
+                        searchRequest.setPredecessor(NodeContext.getUserName());
+                        new UdpCommunicator().sendMessage(child.getIp(), child.getPort(), searchRequest.toString());
                     } catch (IOException e) {
                         LOGGER.error("Could not send message to child {}", child);
                     }

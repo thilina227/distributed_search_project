@@ -16,6 +16,8 @@ public class PeerMessageUtils {
     private static final String HEART_BEAT_RESPONSE_KEYWORD = "PINGOK";
     private static final String ERROR_RESPONSE_KEYWORD = "ERROR";
     private static final String SEARCH_ACK_RESPONSE_KEYWORD = "SERACK";
+    private static final String RESULT_KEYWORD = "RESULT";
+    private static final String SEARCH_RESULT_ACK_RESPONSE_KEYWORD = "RESULTACK";
 
     /**
      * Construct connectWithPeer message
@@ -88,6 +90,23 @@ public class PeerMessageUtils {
      * */
     public static String constructSearchAckResponse() {
         String message = SEARCH_ACK_RESPONSE_KEYWORD + " " + 0;
+        return MessageUtils.prependLength(message);
+    }
+
+
+    /**
+     * Construct message for search result
+     * */
+    public static String constructSearchResultRequest(String fileName, String id) {
+        String message = RESULT_KEYWORD + " " + id + " " + NodeContext.getIp() + " " +fileName;
+        return MessageUtils.prependLength(message);
+    }
+
+    /**
+     * Construct search result acknowledgement
+     * */
+    public static String constructSearchResultAckResponse() {
+        String message = SEARCH_RESULT_ACK_RESPONSE_KEYWORD + " " + 0;
         return MessageUtils.prependLength(message);
     }
 }

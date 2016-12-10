@@ -1,15 +1,16 @@
 package distributed.computing.util;
 
+import distributed.computing.PeerForm;
 import distributed.computing.config.NodeContext;
 import distributed.computing.domain.model.Operation;
 import distributed.computing.domain.model.PeerNode;
 import distributed.computing.messaging.PeerMessageUtils;
 import distributed.computing.messaging.broadcast.BroadCastMessenger;
-import distributed.computing.messaging.broadcast.message.BroadcastRequest;
+import distributed.computing.messaging.broadcast.MessageCache;
+import distributed.computing.messaging.broadcast.message.SearchRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.List;
+import org.apache.logging.log4j.message.Message;
 
 /**
  * Created by dev on 11/26/16.
@@ -52,19 +53,32 @@ public class MessageResolver {
             }
 
             if (message.contains(String.valueOf(Operation.SER))) {
-                LOGGER.debug("broadcast request received");
-                BroadcastRequest broadcastRequest = new BroadcastRequest(message);
-                BroadCastMessenger broadCastMessenger = new BroadCastMessenger();
-                broadCastMessenger.broadcast(broadcastRequest);
-
-
-                //TODO search local files
-
-                //TODO broadcast to others
-
+                LOGGER.debug("search request received");
+                SearchRequest searchRequest = new SearchRequest(message);
+                //do search if only TTL is not expired
+                if (searchRequest.getTtl() <= searchRequest.getHops()) {
+                    // do search if not in cache
+                    if (!MessageCache.isInCache(searchRequest.getId())) {
+                        MessageCache.addCache(searchRequest.getId());
+                        SearchUtil.searchReturnAndBroadcast(searchRequest);
+                    }
+                } else {
+                    LOGGER.info("Discarding search request!");
+                }
                 return PeerMessageUtils.constructSearchAckResponse();
             }
 
+
+            if (message.contains(String.valueOf(Operation.RESULT))) {
+                LOGGER.debug("search result received");
+                //length RESULT uuid ip fileName
+                String chunks [] = message.split(PEER_MESSAGE_DELIMITER);
+                String id = chunks[2];
+                String ip = chunks[3];
+                String fileName = message.substring(message.indexOf(ip) + ip.length() + 1);
+                PeerForm.addSearchResult(fileName, ip);
+                return PeerMessageUtils.constructSearchResultAckResponse();
+            }
             //TODO implement other operations
         }
 
