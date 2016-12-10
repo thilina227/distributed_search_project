@@ -410,7 +410,7 @@ public class PeerForm extends javax.swing.JFrame {
             valid = false;
         }
         if (valid) {
-            NodeContext.setIp(Utils.getIP());
+            NodeContext.setIp(txtNodeIp.getText());
             NodeContext.setPort(Integer.parseInt(NodePort.getText()));
             NodeContext.setUserName(NodeName.getText()); 
             LOGGER.info("Node Name: "+ NodeName.getText() + ", Node IP: "+  Utils.getIP()+", Node Port:"+ NodePort.getText());

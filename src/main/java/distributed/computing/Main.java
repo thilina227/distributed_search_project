@@ -12,6 +12,8 @@ public class Main {
     private static final Logger LOGGER = LogManager.getLogger(Main.class.getName());
 
     public static void main(String[] args) {
+        System.setProperty("log4j.configurationFile", "file:");
+
         PeerForm form = new PeerForm();
         form.setVisible(true);
         LOGGER.debug("Initializing...");

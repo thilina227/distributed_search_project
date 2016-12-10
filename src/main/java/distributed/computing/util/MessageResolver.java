@@ -56,7 +56,7 @@ public class MessageResolver {
                 LOGGER.debug("search request received");
                 SearchRequest searchRequest = new SearchRequest(message);
                 //do search if only TTL is not expired
-                if (searchRequest.getTtl() <= searchRequest.getHops()) {
+                if (searchRequest.getTtl() >= searchRequest.getHops()) {
                     // do search if not in cache
                     if (!MessageCache.isInCache(searchRequest.getId())) {
                         MessageCache.addCache(searchRequest.getId());
