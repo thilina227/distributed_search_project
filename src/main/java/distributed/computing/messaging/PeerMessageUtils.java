@@ -68,6 +68,16 @@ public class PeerMessageUtils {
     }
 
     /**
+     * Construct HEART BEAT request message
+     *
+     * @return message
+     */
+    public static String constructHeartBeatMessage() {
+        String message = "PING";
+        return MessageUtils.prependLength(message);
+    }
+
+    /**
      * Construct ERROR response message
      *
      * @return message

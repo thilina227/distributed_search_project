@@ -89,6 +89,20 @@ public class NodeContext {
     }
 
     /**
+     * Remove child node
+     *
+     * @param child node
+     */
+    public static void removeChild(PeerNode child) {
+        List<PeerNode> children = NodeContext.getChildren();
+        for (PeerNode node : children) {
+            if (child.getUsername().trim().equals(node.getUsername().trim())) {
+                peerNodes.remove(node);
+            }
+        }
+    }
+
+    /**
      * Remove parent node
      *
      * @param parent parent node
@@ -96,7 +110,7 @@ public class NodeContext {
     public static void removeParent(PeerNode parent) {
         List<PeerNode> parents = NodeContext.getParents();
         for (PeerNode node : parents) {
-            if (parent.getUsername().equals(node.getUsername())) {
+            if (parent.getUsername().trim().equals(node.getUsername().trim())) {
                 peerNodes.remove(node);
             }
         }

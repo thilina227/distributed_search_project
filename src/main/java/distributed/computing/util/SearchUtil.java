@@ -24,7 +24,7 @@ public class SearchUtil {
 
     //break the search term into words
     private static final String SEARCH_DELIMITER = " ";
-    private static final int TTL = 2;
+    private static final int TTL = 5;
 
     public static final void search(String searchTerm) {
         if (searchTerm.contains(SEARCH_DELIMITER)) {
