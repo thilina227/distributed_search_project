@@ -27,7 +27,7 @@ public class PeerMessageUtils {
      * @return String message
      */
     public static String constructConnectMessage(PeerNode peerNode) {
-        String message = String.format(CONNECT_MESSAGE_FORMAT, Operation.CONNECT, peerNode.getIp(), peerNode.getPort(), NodeContext.getUserName());
+        String message = String.format(CONNECT_MESSAGE_FORMAT, Operation.CONNECT, NodeContext.getIp(), NodeContext.getPort(), NodeContext.getUserName());
         message = MessageUtils.prependLength(message);
         return message;
     }
