@@ -1,6 +1,7 @@
 package distributed.computing.config;
 
 import distributed.computing.domain.model.PeerNode;
+import distributed.computing.util.PeerNodeObserver;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,6 +16,11 @@ public class NodeContext {
     private static String userName;
     //thread safe list
     private static List<PeerNode> peerNodes = Collections.synchronizedList(new ArrayList<PeerNode>());
+
+    private static boolean online = false;
+
+    //list of observers
+    private static List<PeerNodeObserver> observers = Collections.synchronizedList(new ArrayList<PeerNodeObserver>());
 
     public static String getIp() {
         return ip;
@@ -47,6 +53,7 @@ public class NodeContext {
     public static void addChild(PeerNode peerNode) {
         peerNode.setRelationship(PeerNode.Type.CHILD);
         peerNodes.add(peerNode);
+        notifyObservers();
     }
 
     /**
@@ -91,6 +98,18 @@ public class NodeContext {
     /**
      * Remove child node
      *
+     */
+    public static void removeChilden() {
+        List<PeerNode> children = NodeContext.getChildren();
+        for (PeerNode node : children) {
+            peerNodes.remove(node);
+        }
+        notifyObservers();
+    }
+
+    /**
+     * Remove child node
+     *
      * @param child node
      */
     public static void removeChild(PeerNode child) {
@@ -100,6 +119,14 @@ public class NodeContext {
                 peerNodes.remove(node);
             }
         }
+        notifyObservers();
+    }
+
+    private static void notifyObservers() {
+        for (PeerNodeObserver observer : observers) {
+            observer.onChildChanged(getChildren());
+        }
+
     }
 
     /**
@@ -114,5 +141,20 @@ public class NodeContext {
                 peerNodes.remove(node);
             }
         }
+    }
+
+    /**
+     * add to list of observers, so it will notify observer when a child change
+     * */
+    public static void tellMeWhenChildChanged(PeerNodeObserver observer){
+        observers.add(observer);
+    }
+
+    public static boolean isOnline() {
+        return online;
+    }
+
+    public static void setOnline(boolean online) {
+        NodeContext.online = online;
     }
 }

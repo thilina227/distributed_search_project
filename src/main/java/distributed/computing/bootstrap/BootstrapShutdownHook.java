@@ -22,8 +22,9 @@ public class BootstrapShutdownHook extends Thread {
     @Override
     public void run() {
         LOGGER.info("Shutting down...");
-        Bootstrap.unregister();
-
+        if (NodeContext.isOnline()) {
+            Bootstrap.unregister();
+        }
         List<PeerNode> children = NodeContext.getChildren();
         for (PeerNode child : children) {
             Connect.disconnectFromPeer(child);

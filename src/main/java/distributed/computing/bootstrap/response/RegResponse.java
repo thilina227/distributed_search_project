@@ -14,6 +14,7 @@ public class RegResponse extends BootstrapResponse {
 
     private static final String empty = new String();
     private List<PeerNode> peerNodes = new ArrayList<>();
+    private boolean regOk;
 
     public RegResponse(String messageString) {
         super(messageString);
@@ -35,5 +36,13 @@ public class RegResponse extends BootstrapResponse {
 
     public List<PeerNode> getPeerNodes() {
         return peerNodes;
+    }
+
+    public boolean isRegOk() {
+        return regOk;
+    }
+
+    public void setRegOk(boolean regOk) {
+        this.regOk = regOk;
     }
 }

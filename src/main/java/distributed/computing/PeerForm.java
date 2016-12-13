@@ -8,6 +8,7 @@ package distributed.computing;
 import distributed.computing.appender.JTextAreaAppender;
 import distributed.computing.bootstrap.Bootstrap;
 import distributed.computing.bootstrap.BootstrapShutdownHook;
+import distributed.computing.bootstrap.response.RegResponse;
 import distributed.computing.config.BootstrapServerConfig;
 import distributed.computing.config.NodeContext;
 import distributed.computing.domain.model.FileManager;
@@ -15,17 +16,22 @@ import distributed.computing.domain.model.PeerNode;
 import distributed.computing.listner.Listener;
 import distributed.computing.listner.UdpListener;
 import distributed.computing.messaging.broadcast.MessageCache;
+import distributed.computing.util.PeerNodeObserver;
 import distributed.computing.util.SearchUtil;
 import distributed.computing.util.Utils;
+import java.awt.Color;
 import javax.swing.JOptionPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  *
  * @author yasitham
  */
-public class PeerForm extends javax.swing.JFrame {
+public class PeerForm extends javax.swing.JFrame implements PeerNodeObserver{
 
     private static final Logger LOGGER = LogManager.getLogger(PeerForm.class.getName());
 
@@ -37,6 +43,7 @@ public class PeerForm extends javax.swing.JFrame {
         initComponents();
         JTextAreaAppender.addTextArea(this.logTxtArea);
         txtNodeIp.setText(Utils.getIP());
+        NodeContext.tellMeWhenChildChanged(this);
     }
 
     /**
@@ -78,6 +85,7 @@ public class PeerForm extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jLabel11 = new javax.swing.JLabel();
         txtNodeIp = new javax.swing.JTextField();
+        lblStatus = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Peer Properties");
@@ -180,6 +188,14 @@ public class PeerForm extends javax.swing.JFrame {
 
         jLabel11.setText("Node IP:");
 
+        lblStatus.setBackground(new java.awt.Color(158, 158, 158));
+        lblStatus.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        lblStatus.setForeground(new java.awt.Color(101, 101, 101));
+        lblStatus.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblStatus.setText("OFFLINE");
+        lblStatus.setFocusable(false);
+        lblStatus.setOpaque(true);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -217,7 +233,9 @@ public class PeerForm extends javax.swing.JFrame {
                                         .addComponent(bsPort, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(bsRegButton, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(150, 150, 150))))
+                                        .addGap(33, 33, 33)
+                                        .addComponent(lblStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(46, 46, 46))))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel9)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -267,17 +285,21 @@ public class PeerForm extends javax.swing.JFrame {
                     .addComponent(txtNodeIp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel1)
+                                .addComponent(bsIP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGap(14, 14, 14))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel2)
+                                .addComponent(bsPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(bsRegButton))
+                            .addGap(18, 18, 18)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(bsIP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(14, 14, 14))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(bsPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(bsRegButton))
-                        .addGap(18, 18, 18)))
+                        .addComponent(lblStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(5, 5, 5)
@@ -285,9 +307,9 @@ public class PeerForm extends javax.swing.JFrame {
                             .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(peerName1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel6)
-                            .addComponent(peerName2, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(peerName2, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6)))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -355,16 +377,38 @@ public class PeerForm extends javax.swing.JFrame {
             Listener udpListener = UdpListener.getInstance();
             udpListener.initListener(NodeContext.getPort());
 
-            Bootstrap.register();
-            int i = 0;
-            for (PeerNode node : NodeContext.getChildren()){
-                if(i == 0)
-                    peerName1.setText(node.getUsername());
-                else if (i == 1){
-                    peerName2.setText(node.getUsername());
+            if (!NodeContext.isOnline()) {
+                //if offline
+
+                RegResponse regResponse = null;
+                try {
+                    regResponse = Bootstrap.register();
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(rootPane, "Registration failed!, " + e.getMessage());
                 }
-                i++;
-            } 
+                if(regResponse.isRegOk()) {
+                    bsRegButton.setText("Unregister");
+                    NodeContext.setOnline(true);
+                    lblStatus.setText("ONLINE");
+                    lblStatus.setForeground(Color.GREEN);
+                    lblStatus.setBackground(new Color(91, 128, 92));
+                    
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Registration failed!, " + regResponse.getStatusMessage());
+                }
+            } else {
+                //if online
+                if(Bootstrap.unregister()) {
+                    bsRegButton.setText("Register");
+                    NodeContext.setOnline(false);
+                    lblStatus.setText("OFFLINE");
+                    lblStatus.setForeground(Color.GRAY);
+                    lblStatus.setBackground(Color.LIGHT_GRAY);
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Failed to unregister");
+                }
+            }
+            
             Runtime.getRuntime().addShutdownHook(new BootstrapShutdownHook());
             MessageCache.initCachingScheduler();//init caching scheduler
             
@@ -374,6 +418,8 @@ public class PeerForm extends javax.swing.JFrame {
             txtLocalFileNames.setEnabled(true);
             txtLocalFileNames.setEditable(valid);
             NodeContext.setIp(txtNodeIp.getText());
+            
+            
         }
         
         
@@ -424,7 +470,7 @@ public class PeerForm extends javax.swing.JFrame {
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
         SearchUtil.search(keyWord.getText());
-
+        resultArea.setText("");
     }//GEN-LAST:event_searchButtonActionPerformed
 
     private void txtLocalFileNamesCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txtLocalFileNamesCaretUpdate
@@ -512,6 +558,7 @@ public class PeerForm extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTextField keyWord;
+    private javax.swing.JLabel lblStatus;
     private javax.swing.JTextArea logTxtArea;
     private javax.swing.JLabel peerName1;
     private javax.swing.JLabel peerName2;
@@ -542,5 +589,20 @@ public class PeerForm extends javax.swing.JFrame {
         
     }
 
-  
+    @Override
+    public void onChildChanged(List<PeerNode> children) {
+        if (children.isEmpty()) {
+            peerName1.setText("");
+            peerName2.setText("");
+        }
+        int i = 0;
+        for (PeerNode node : NodeContext.getChildren()) {
+            if (i == 0)
+                peerName1.setText(node.getUsername());
+            else if (i == 1) {
+                peerName2.setText(node.getUsername());
+            }
+            i++;
+        }
+    }
 }

@@ -31,39 +31,40 @@ public class Bootstrap {
      *
      * @return boolean success/fail
      */
-    public static boolean register() {
+    public static RegResponse register() throws IOException {
         LOGGER.info("Registering with Bootstrap server");
         TcpCommunicator tcpCommunicator = new TcpCommunicator();
+        RegResponse regResponse = null;
         try {
             String message = BootstrapMessageUtils.constructRegMessage();
             String response = tcpCommunicator.sendMessage(BootstrapServerConfig.getHost(),
                     BootstrapServerConfig.getPort(), message);
             
-//            form.setSendMessage(message);
-//            form.setResponseMessage(response);
-            
-            RegResponse regResponse = new RegResponse(response);
+            regResponse = new RegResponse(response);
             if (regResponse.getStatusCode() < ErrorCodeResolver.OK_MIN_FAIL_RANGE) {
                 //This means reg is success
                 connectPeers(regResponse);
 
-
-                return true;
+                regResponse.setRegOk(true);
+                return regResponse;
             } else {
                 LOGGER.error("Registration failed, responseCode: {}, responseMessage: {}",
                         regResponse.getStatusCode(), regResponse.getStatusMessage());
-                //TODO handle
+                regResponse.setRegOk(false);
             }
 
         } catch (IllegalArgumentException e) {
             LOGGER.error("IllegalArgumentException occurred when connecting Bootstrap Server", e);
+            throw e;
         } catch (IOException e) {
             LOGGER.error("IOException occurred when connecting Bootstrap Server", e);
+            throw e;
         }
-        return false;
+        return regResponse;
     }
 
     private static void connectPeers(RegResponse regResponse) {
+        NodeContext.removeChilden();
         int nodeCount = regResponse.getPeerNodes().size();
         if (nodeCount == 0) {
             //no peer nodes yet in the BS
@@ -147,9 +148,11 @@ public class Bootstrap {
         try {
             String response = tcpCommunicator.sendMessage(BootstrapServerConfig.getHost(),
                     BootstrapServerConfig.getPort(), BootstrapMessageUtils.constructUnRegMessage());
-
-            //TODO validate response
-            //if (response is ok return true)
+            
+            if (response.contains("UNROK")) {
+                NodeContext.removeChilden();
+                return true;
+            }
 
         } catch (IllegalArgumentException e) {
             LOGGER.error("IllegalArgumentException occurred when connecting Bootstrap Server", e);
