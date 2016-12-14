@@ -19,11 +19,12 @@ public abstract class BootstrapResponse {
         if (messageString != null) {
             if (messageString.contains(MESSAGE_DELIMITER)) {
                 String chunks[] = messageString.split(MESSAGE_DELIMITER);
-                if (chunks.length >= 4) {
+                if (chunks.length >= 3) {
                     messageLength = Integer.valueOf(chunks[0]);
                     keyword = chunks[1];
                     statusCode = Integer.valueOf(chunks[2]);
-                    messageBody = responseString.substring(responseString.indexOf(chunks[3]));
+                    if (chunks.length >= 4)
+                        messageBody = responseString.substring(responseString.indexOf(chunks[3]));
                 }
             }
         }
