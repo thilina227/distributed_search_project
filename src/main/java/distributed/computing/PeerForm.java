@@ -469,8 +469,8 @@ public class PeerForm extends javax.swing.JFrame implements PeerNodeObserver{
     }//GEN-LAST:event_applyButtonActionPerformed
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
-        SearchUtil.search(keyWord.getText());
         resultArea.setText("");
+        SearchUtil.search(keyWord.getText());        
     }//GEN-LAST:event_searchButtonActionPerformed
 
     private void txtLocalFileNamesCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txtLocalFileNamesCaretUpdate
