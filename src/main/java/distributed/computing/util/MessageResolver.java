@@ -59,11 +59,10 @@ public class MessageResolver {
                 if (searchRequest.getTtl() >= searchRequest.getHops()) {
                     // do search if not in cache
                     if (!MessageCache.isInCache(searchRequest.getId())) {
-                        MessageCache.addCache(searchRequest.getId());
                         SearchUtil.searchReturnAndBroadcast(searchRequest);
                     }
                 } else {
-                    LOGGER.info("Discarding search request!");
+                    LOGGER.info("Discarding search request! TTL > # of hops");
                 }
                 return PeerMessageUtils.constructSearchAckResponse();
             }

@@ -24,22 +24,21 @@ public class SearchUtil {
 
     //break the search term into words
     private static final String SEARCH_DELIMITER = " ";
-    private static final int TTL = 5;
 
-    public static final void search(String searchTerm) {
+    public static final void search(String searchTerm, int ttl) {
         if (searchTerm.contains(SEARCH_DELIMITER)) {
             String[] kewords = searchTerm.split(SEARCH_DELIMITER);
             for (String keyword : kewords) {
-                initiateSearch(keyword);
+                initiateSearch(keyword, ttl);
 
             }
         } else {
-            initiateSearch(searchTerm);
+            initiateSearch(searchTerm, ttl);
         }
 
     }
 
-    private static void initiateSearch(String searchTerm) {
+    private static void initiateSearch(String searchTerm, int ttl) {
         LOGGER.debug("searching for {}", searchTerm);
 
         //do local search
@@ -48,7 +47,7 @@ public class SearchUtil {
         //create a broadcast search request
         BroadCastMessenger broadCastMessenger = new BroadCastMessenger();
         SearchRequest searchRequest = new SearchRequest(searchTerm, String.valueOf(Operation.SER), NodeContext.getIp(),
-                NodeContext.getPort(), 1, TTL, NodeContext.getUserName());
+                NodeContext.getPort(), 1, ttl, NodeContext.getUserName());
         broadCastMessenger.broadcast(searchRequest);
 
     }

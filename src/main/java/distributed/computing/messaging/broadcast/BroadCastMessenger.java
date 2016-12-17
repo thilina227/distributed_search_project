@@ -17,8 +17,6 @@ public class BroadCastMessenger {
 
     private static final Logger LOGGER = LogManager.getLogger(BroadCastMessenger.class.getName());
 
-    private static final String BROADCAST_RESPONSE_ACK = "ACK";
-
     /**
      * Broadcast message to network
      *
@@ -29,7 +27,7 @@ public class BroadCastMessenger {
         String predecessorNode = searchRequest.getPredecessor().trim();
         if (MessageCache.isInCache(searchRequest.getId())) {
             //Do nothing
-            LOGGER.debug("Discarding message {}", searchRequest.getId());
+            LOGGER.debug("Discarding message {}, already in cache", searchRequest.getId());
         } else {
             MessageCache.addCache(searchRequest.getId());
             for (PeerNode parent : NodeContext.getParents()) {
