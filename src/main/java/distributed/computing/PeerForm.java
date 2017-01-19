@@ -482,7 +482,8 @@ public class PeerForm extends javax.swing.JFrame implements PeerNodeObserver{
                     JOptionPane.showMessageDialog(rootPane, "Registration failed!, " + e.getMessage());
                 }
                 if(regResponse.isRegOk()) {
-                    bsRegButton.setText("Unregister");
+//                    bsRegButton.setText("Unregister");
+                    bsRegButton.setEnabled(false);
                     NodeContext.setOnline(true);
                     lblStatus.setText("ONLINE");
                     lblStatus.setForeground(Color.GREEN);

@@ -14,6 +14,7 @@ public class PeerMessageUtils {
     private static final String CONNECT_RESPONSE_KEYWORD = "CONNECTOK";
     private static final String DISCONNECT_RESPONSE_KEYWORD = "DISCONNECTOK";
     private static final String HEART_BEAT_RESPONSE_KEYWORD = "PINGOK";
+    private static final String HEART_BEAT_OFFLINE_RESPONSE_KEYWORD = "PINGOFFLINE";
     private static final String ERROR_RESPONSE_KEYWORD = "ERROR";
     private static final String SEARCH_ACK_RESPONSE_KEYWORD = "SERACK";
     private static final String RESULT_KEYWORD = "RESULT";
@@ -64,6 +65,16 @@ public class PeerMessageUtils {
      */
     public static String constructHeartBeatResponse() {
         String message = HEART_BEAT_RESPONSE_KEYWORD + " " + 0;
+        return MessageUtils.prependLength(message);
+    }
+
+    /**
+     * Construct HEART BEAT response message
+     *
+     * @return message
+     */
+    public static String constructHeartBeatOfflineResponse() {
+        String message = HEART_BEAT_OFFLINE_RESPONSE_KEYWORD + " " + 0;
         return MessageUtils.prependLength(message);
     }
 

@@ -26,7 +26,12 @@ public class MessageResolver {
         if (message != null && !message.equals("")) {
 
             if (message.contains(String.valueOf(Operation.PING))) {
-                return PeerMessageUtils.constructHeartBeatResponse();
+                if (NodeContext.isOnline()) {
+                    return PeerMessageUtils.constructHeartBeatResponse();
+                } else {
+                    return PeerMessageUtils.constructHeartBeatOfflineResponse();
+                }
+
             }
 
             if (message.contains(String.valueOf(Operation.DISCONNECT))) {
