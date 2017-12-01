@@ -15,6 +15,7 @@ public class UdpCommunicator implements Communicator{
 
     @Override
     public String sendMessage(String host, int port, String message) throws IOException {
+        message = message.trim();
         byte[] sendData = new byte[1024];
         byte[] receiveData = new byte[1024];
         DatagramSocket clientSocket = new DatagramSocket();

@@ -25,7 +25,7 @@ public class CommentBroadCastUtil {
             public void run() {
                 LOGGER.debug("broadcasting comment");
                 MessageRequest request = new MessageRequest(UUID.randomUUID().toString(),
-                        comment.getFileHash() + " " + comment.getCommentId() + " " + comment.getNode() + " " +comment.getTime() + " " + comment.getComment(),
+                        comment.getFileHash() + " " + comment.getCommentId() + " " + comment.getNode() + " " +comment.getTime().getTime() + " " + comment.getComment(),
                         "CMNT", 0, (int)PeerForm.spTtl.getValue(), NodeContext.getUserName());
                 BroadCastMessenger broadCastMessenger = new BroadCastMessenger();
                 broadCastMessenger.broadcast(request);
@@ -38,7 +38,7 @@ public class CommentBroadCastUtil {
             @Override
             public void run() {
                 Comment comment = new Comment();
-                String chunks[] = request.getData().split(" ");
+                String chunks[] = request.getData().trim().split(" ");
                 comment.setFileHash(chunks[0]);
                 comment.setCommentId(chunks[1]);
                 comment.setNode(chunks[2]);
