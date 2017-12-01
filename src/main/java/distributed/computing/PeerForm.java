@@ -376,7 +376,7 @@ public class PeerForm extends javax.swing.JFrame implements PeerNodeObserver{
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        btnComments.setText("Reviews");
+        btnComments.setText("Comments");
         btnComments.setEnabled(false);
         btnComments.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -396,10 +396,10 @@ public class PeerForm extends javax.swing.JFrame implements PeerNodeObserver{
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 381, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnComments, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(3, 3, 3)
+                .addComponent(btnComments, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(40, Short.MAX_VALUE))
+                .addContainerGap())
             .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
@@ -642,8 +642,9 @@ public class PeerForm extends javax.swing.JFrame implements PeerNodeObserver{
 
     private void btnCommentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCommentsActionPerformed
         if (!resultList.isSelectionEmpty()) {
-            resultList.getSelectedValue();
-            new Forum().setVisible(true);
+            String fileName = resultList.getSelectedValue();
+            fileName = fileName.substring(fileName.indexOf(":")+2, fileName.length());
+            new Forum(fileName).setVisible(true);
         }
     }//GEN-LAST:event_btnCommentsActionPerformed
 
