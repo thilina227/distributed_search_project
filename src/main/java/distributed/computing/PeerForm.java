@@ -76,9 +76,9 @@ public class PeerForm extends javax.swing.JFrame implements PeerNodeObserver{
         NodePort = new javax.swing.JTextField();
         applyButton = new javax.swing.JButton();
         bsRegButton = new javax.swing.JButton();
+        keyWord = new javax.swing.JTextField();
         lblStatus = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        keyWord = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         spTtl = new javax.swing.JSpinner();
         searchButton = new javax.swing.JButton();
@@ -153,6 +153,13 @@ public class PeerForm extends javax.swing.JFrame implements PeerNodeObserver{
             }
         });
 
+        keyWord.setEnabled(false);
+        keyWord.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                keyWordActionPerformed(evt);
+            }
+        });
+
         lblStatus.setBackground(new java.awt.Color(158, 158, 158));
         lblStatus.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
         lblStatus.setForeground(new java.awt.Color(101, 101, 101));
@@ -162,8 +169,6 @@ public class PeerForm extends javax.swing.JFrame implements PeerNodeObserver{
         lblStatus.setOpaque(true);
 
         jLabel7.setText("Key Word:");
-
-        keyWord.setEnabled(false);
 
         jLabel12.setText("TTL");
 
@@ -675,6 +680,11 @@ public class PeerForm extends javax.swing.JFrame implements PeerNodeObserver{
 
         }        
     }//GEN-LAST:event_addFileNamesBtnActionPerformed
+
+    private void keyWordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_keyWordActionPerformed
+        resultListModel.clear();
+        SearchUtil.search(keyWord.getText(), (int) spTtl.getValue());  
+    }//GEN-LAST:event_keyWordActionPerformed
    
     public static void addSearchResult(String fileName, String location) {
         synchronized(resultListModel) {

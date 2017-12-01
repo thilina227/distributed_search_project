@@ -6,10 +6,15 @@
 package distributed.computing;
 
 import distributed.computing.config.NodeContext;
+import distributed.computing.domain.model.Comment;
 import distributed.computing.sevice.CommentRatingService;
 import distributed.computing.sevice.CommentService;
 import distributed.computing.sevice.FileRatingService;
 import distributed.computing.util.Utils;
+import java.awt.GridBagConstraints;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 import javax.swing.JOptionPane;
 
 /**
@@ -39,6 +44,24 @@ public class Forum extends javax.swing.JFrame {
         int rating = fileRatingService.getFileRating(Utils.md5(fileName))[0];
         int rateCount = fileRatingService.getFileRating(Utils.md5(fileName))[1];
         lblFileRating.setText(rating + " / out of " + rateCount + " reviews");
+        
+        loadComments();
+    }
+    
+    private void loadComments(){
+        cmntPnlsList.removeAll();
+        List<Comment> commentsList = commentService.getComments(Utils.md5(fileName));
+        int cmntCount = 0;
+        for (Comment comment : commentsList) {
+            CommentPanel commentPanel = new CommentPanel(comment);
+            GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
+            gridBagConstraints.gridx = 0;
+            gridBagConstraints.gridy = cmntCount;
+            cmntPnlsList.add(commentPanel, gridBagConstraints);
+            cmntCount = cmntCount + 1;
+        }
+        cmntPnlsList.repaint();
+        cmntPnlsList.validate();
     }
 
     /**
@@ -49,6 +72,7 @@ public class Forum extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         groupfileRatings = new javax.swing.ButtonGroup();
         jLabel1 = new javax.swing.JLabel();
@@ -57,11 +81,10 @@ public class Forum extends javax.swing.JFrame {
         lblFileName = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        txtCmnt = new javax.swing.JTextArea();
         btnCmntSubmit = new javax.swing.JButton();
         jscrlCmnts = new javax.swing.JScrollPane();
-        jPanel3 = new javax.swing.JPanel();
-        jPanel5 = new javax.swing.JPanel();
+        cmntPnlsList = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         fileR1 = new javax.swing.JRadioButton();
         fileR2 = new javax.swing.JRadioButton();
@@ -74,6 +97,7 @@ public class Forum extends javax.swing.JFrame {
         lblFileRating = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
         jLabel1.setText("Comments");
@@ -101,9 +125,9 @@ public class Forum extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        txtCmnt.setColumns(20);
+        txtCmnt.setRows(5);
+        jScrollPane1.setViewportView(txtCmnt);
 
         btnCmntSubmit.setText("Submit Comment");
         btnCmntSubmit.addActionListener(new java.awt.event.ActionListener() {
@@ -112,31 +136,9 @@ public class Forum extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 566, Short.MAX_VALUE)
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 140, Short.MAX_VALUE)
-        );
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 179, Short.MAX_VALUE))
-        );
-
-        jscrlCmnts.setViewportView(jPanel3);
+        cmntPnlsList.setMaximumSize(new java.awt.Dimension(566, 32767));
+        cmntPnlsList.setLayout(new java.awt.GridBagLayout());
+        jscrlCmnts.setViewportView(cmntPnlsList);
 
         fileR1.setText("1");
         fileR1.setActionCommand("1");
@@ -206,7 +208,7 @@ public class Forum extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jscrlCmnts, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 581, Short.MAX_VALUE)
+                    .addComponent(jscrlCmnts, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 581, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -227,9 +229,9 @@ public class Forum extends javax.swing.JFrame {
                             .addComponent(jButton1)
                             .addComponent(btnCmntSubmit)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jscrlCmnts, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jscrlCmnts, javax.swing.GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(17, 17, 17))
@@ -262,14 +264,25 @@ public class Forum extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCmntSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCmntSubmitActionPerformed
-        // TODO add your handling code here:
+        if (txtCmnt.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(rootPane, "Comment is empty!");
+        } else {
+            
+            Comment comment = new Comment(UUID.randomUUID().toString(), Utils.md5(fileName),
+                    NodeContext.getUserName(), txtCmnt.getText(), new Date());
+            commentService.saveComment(comment);
+            
+            JOptionPane.showMessageDialog(rootPane, "Comment submitted");
+            loadComments();
+        }
     }//GEN-LAST:event_btnCmntSubmitActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -326,6 +339,7 @@ public class Forum extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCmntSubmit;
+    private javax.swing.JPanel cmntPnlsList;
     private javax.swing.JRadioButton fileR1;
     private javax.swing.JRadioButton fileR2;
     private javax.swing.JRadioButton fileR3;
@@ -339,13 +353,11 @@ public class Forum extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JScrollPane jscrlCmnts;
     private javax.swing.JLabel lblFileName;
     private javax.swing.JLabel lblFileRating;
+    private javax.swing.JTextArea txtCmnt;
     // End of variables declaration//GEN-END:variables
 }
