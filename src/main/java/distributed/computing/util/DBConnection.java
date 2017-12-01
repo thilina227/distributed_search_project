@@ -23,7 +23,7 @@ public class DBConnection {
             "file_hash text NOT NULL," +
             "node text NOT NULL," +
             "comment text," +
-            "time DATETIME DEFAULT CURRENT_TIMESTAMP);";
+            "comment_time integer NOT NULL);";
 
     private static final String COMMENT_RATING_TABLE = "CREATE TABLE IF NOT EXISTS comment_rating(" +
             "comment_id text NOT NULL," +

@@ -22,7 +22,7 @@ public class FileRatingService {
             PreparedStatement pstmt = conn.prepareStatement(INSERT_FILE_RATING);
             pstmt.setString(1, fileHash);
             pstmt.setString(2, node);
-            pstmt.setInt(2, rating);
+            pstmt.setInt(3, rating);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             LOGGER.error("failed to insert file rating", e);
@@ -40,7 +40,7 @@ public class FileRatingService {
 
         try {
             Connection conn = DBConnection.getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(INSERT_FILE_RATING);
+            PreparedStatement pstmt = conn.prepareStatement(SELECT_FILE_RATING);
             pstmt.setString(1, fileHash);
             ResultSet rs    = pstmt.executeQuery();
 
