@@ -22,6 +22,7 @@ public class MessageResolver {
     private static final Logger LOGGER = LogManager.getLogger(MessageResolver.class.getName());
 
     private static final String PEER_MESSAGE_DELIMITER = " ";
+    private static CommentBroadCastUtil commentBroadCastUtil = new CommentBroadCastUtil();
 
     public static String resolvePeerMessage(String message) {
 
@@ -90,9 +91,15 @@ public class MessageResolver {
             if (message.split(" ")[1].equalsIgnoreCase("CMNT")) {
                 LOGGER.debug("comment received");
                 MessageRequest request = new MessageRequest(message);
-                CommentBroadCastUtil commentBroadCastUtil = new CommentBroadCastUtil();
                 commentBroadCastUtil.handleReceivedComment(request);
                 return MessageUtils.prependLength("CMNTACK 0");
+            }
+
+            if (message.split(" ")[1].equalsIgnoreCase("FILRTNG")) {
+                LOGGER.debug("file rating received");
+                MessageRequest request = new MessageRequest(message);
+                commentBroadCastUtil.handleReceivedFileRating(request);
+                return MessageUtils.prependLength("FILRTNGACK 0");
             }
         }
 

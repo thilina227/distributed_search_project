@@ -649,6 +649,7 @@ public class PeerForm extends javax.swing.JFrame implements PeerNodeObserver{
         if (!resultList.isSelectionEmpty()) {
             String fileName = resultList.getSelectedValue();
             fileName = fileName.substring(fileName.indexOf(":")+2, fileName.length());
+            fileName = fileName.trim();
             new Forum(fileName).setVisible(true);
         }
     }//GEN-LAST:event_btnCommentsActionPerformed
