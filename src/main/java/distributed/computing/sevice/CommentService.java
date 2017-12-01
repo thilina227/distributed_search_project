@@ -14,7 +14,7 @@ public class CommentService {
     private static final Logger LOGGER = LogManager.getLogger(CommentService.class.getName());
 
     private static final String INSERT_COMMENT = "INSERT INTO comment (comment_id, file_hash, node, comment, comment_date) values (?, ?, ?, ?, ?)";
-    private static final String SELECT_COMMENTS = "SELECT * FROM comment WHERE file_hash = ?";
+    private static final String SELECT_COMMENTS = "SELECT * FROM comment WHERE file_hash = ? ORDER BY comment_date";
 
     public void saveComment(Comment comment){
         try {

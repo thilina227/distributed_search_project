@@ -61,7 +61,7 @@ public class Forum extends javax.swing.JFrame {
             cmntCount = cmntCount + 1;
         }
         cmntPnlsList.repaint();
-        cmntPnlsList.validate();
+        cmntPnlsList.revalidate();
     }
 
     /**
