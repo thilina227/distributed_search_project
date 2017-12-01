@@ -46,9 +46,9 @@ public class FileRatingService {
 
             // loop through the result set
             while (rs.next()) {
-                count = count++;
+                count = count + 1;
                 ratingSum = ratingSum +rs.getInt("rating");
-                rating = ratingSum / (count * 5);
+                rating = ratingSum / (count);
             }
         } catch (SQLException e) {
             LOGGER.error("failed to get file rating", e);

@@ -59,4 +59,15 @@ public class Comment {
     public void setTime(Date time) {
         this.time = time;
     }
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "commentId='" + commentId + '\'' +
+                ", fileHash='" + fileHash + '\'' +
+                ", node='" + node + '\'' +
+                ", comment='" + comment + '\'' +
+                ", time=" + time.getTime() +
+                '}';
+    }
 }
