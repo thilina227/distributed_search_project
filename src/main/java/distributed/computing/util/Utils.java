@@ -5,8 +5,11 @@
  */
 package distributed.computing.util;
 
+import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  *
@@ -24,5 +27,17 @@ public class Utils {
 
           }
         return ip;
+    }
+
+    public static String md5(String s){
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] digest = md.digest(s.getBytes());
+            BigInteger bigInt = new BigInteger(1,digest);
+           return bigInt.toString(16);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
