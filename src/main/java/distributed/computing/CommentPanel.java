@@ -6,6 +6,7 @@
 package distributed.computing;
 
 import distributed.computing.domain.model.Comment;
+import distributed.computing.messaging.broadcast.CommentBroadCastUtil;
 import distributed.computing.sevice.CommentRatingService;
 import javax.swing.JOptionPane;
 
@@ -17,6 +18,7 @@ public class CommentPanel extends javax.swing.JPanel {
 
     private Comment comment;
     private CommentRatingService commentRatingService = new CommentRatingService();
+    private CommentBroadCastUtil commentBroadCastUtil = new CommentBroadCastUtil();
     /**
      * Creates new form CommentPanel
      */
@@ -104,6 +106,7 @@ public class CommentPanel extends javax.swing.JPanel {
             int ratingCount = commentRatingService.getCommentRating(comment.getCommentId())[1];
             lblCmntRating.setText("☆ " + updatedRating + " / out of " + ratingCount + " ratings");
             JOptionPane.showMessageDialog(btnRateCmnt, "Rating submitted!");
+            commentBroadCastUtil.broadcastCommentRating(comment.getCommentId(), comment.getNode(), rate);
         }
     }//GEN-LAST:event_btnRateCmntActionPerformed
 

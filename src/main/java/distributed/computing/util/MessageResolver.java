@@ -101,6 +101,13 @@ public class MessageResolver {
                 commentBroadCastUtil.handleReceivedFileRating(request);
                 return MessageUtils.prependLength("FILRTNGACK 0");
             }
+
+            if (message.split(" ")[1].equalsIgnoreCase("CMNTRTNG")) {
+                LOGGER.debug("comment rating received");
+                MessageRequest request = new MessageRequest(message);
+                commentBroadCastUtil.handleReceivedCommentRating(request);
+                return MessageUtils.prependLength("CMNTRTNGACK 0");
+            }
         }
 
         return PeerMessageUtils.constructErrorResponse();

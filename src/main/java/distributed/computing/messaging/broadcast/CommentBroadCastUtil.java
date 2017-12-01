@@ -4,6 +4,7 @@ import distributed.computing.PeerForm;
 import distributed.computing.config.NodeContext;
 import distributed.computing.domain.model.Comment;
 import distributed.computing.messaging.broadcast.message.MessageRequest;
+import distributed.computing.sevice.CommentRatingService;
 import distributed.computing.sevice.CommentService;
 import distributed.computing.sevice.FileRatingService;
 import org.apache.logging.log4j.LogManager;
@@ -16,6 +17,7 @@ public class CommentBroadCastUtil {
     private static final Logger LOGGER = LogManager.getLogger(CommentBroadCastUtil.class.getName());
     private CommentService commentService = new CommentService();
     private FileRatingService fileRatingService = new FileRatingService();
+    private CommentRatingService commentRatingService = new CommentRatingService();
 
     public void broadcastComment(final Comment comment){
         new Thread(){
@@ -75,6 +77,36 @@ public class CommentBroadCastUtil {
                 String node = chunks[1];
                 int rating = Integer.valueOf(chunks[2]);
                 fileRatingService.saveFileRating(fileHash, node, rating);
+                BroadCastMessenger broadCastMessenger = new BroadCastMessenger();
+                broadCastMessenger.broadcast(request);
+            }
+        }.start();
+    }
+
+    public void broadcastCommentRating(final String commentId, final String node, final int rating){
+        new Thread(){
+            @Override
+            public void run() {
+                LOGGER.debug("broadcasting comment rating");
+                MessageRequest request = new MessageRequest(UUID.randomUUID().toString(),
+                        commentId + " " + node + " " + rating,
+                        "CMNTRTNG", 0, (int)PeerForm.spTtl.getValue(), NodeContext.getUserName());
+                BroadCastMessenger broadCastMessenger = new BroadCastMessenger();
+                broadCastMessenger.broadcast(request);
+            }
+        }.start();
+    }
+
+    public void handleReceivedCommentRating(final MessageRequest request) {
+        new Thread() {
+            @Override
+            public void run() {
+                Comment comment = new Comment();
+                String chunks[] = request.getData().split(" ");
+                String commentId = chunks[0];
+                String node = chunks[1];
+                int rating = Integer.valueOf(chunks[2]);
+                commentRatingService.saveCommentRating(commentId, node, rating);
                 BroadCastMessenger broadCastMessenger = new BroadCastMessenger();
                 broadCastMessenger.broadcast(request);
             }

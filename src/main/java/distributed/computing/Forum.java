@@ -42,7 +42,7 @@ public class Forum extends javax.swing.JFrame {
         
         int rating = fileRatingService.getFileRating(Utils.md5(fileName))[0];
         int rateCount = fileRatingService.getFileRating(Utils.md5(fileName))[1];
-        lblFileRating.setText(rating + " / out of " + rateCount + " reviews");
+        lblFileRating.setText(rating + " / out of " + rateCount + " ratings");
         
         loadComments();
     }
@@ -295,7 +295,7 @@ public class Forum extends javax.swing.JFrame {
             
             int updatedRating = fileRatingService.getFileRating(Utils.md5(fileName))[0];
             int rateCount = fileRatingService.getFileRating(Utils.md5(fileName))[1];
-            lblFileRating.setText(updatedRating + " / out of " + rateCount + " reviews");
+            lblFileRating.setText(updatedRating + " / out of " + rateCount + " ratings");
             broadCastUtil.broadcastFileRating(Utils.md5(fileName), NodeContext.getUserName(), rating);
         } else {
             JOptionPane.showMessageDialog(rootPane, "Select your rating");
