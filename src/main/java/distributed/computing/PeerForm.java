@@ -376,7 +376,7 @@ public class PeerForm extends javax.swing.JFrame implements PeerNodeObserver{
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        btnComments.setText("forum");
+        btnComments.setText("Reviews");
         btnComments.setEnabled(false);
         btnComments.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -536,7 +536,7 @@ public class PeerForm extends javax.swing.JFrame implements PeerNodeObserver{
                     lblStatus.setText("ONLINE");
                     lblStatus.setForeground(Color.GREEN);
                     lblStatus.setBackground(new Color(91, 128, 92));
-                    
+                    fileNamesUpdate();
                 } else {
                     JOptionPane.showMessageDialog(rootPane, "Registration failed!, " + regResponse.getStatusMessage());
                 }
@@ -665,6 +665,7 @@ public class PeerForm extends javax.swing.JFrame implements PeerNodeObserver{
                     filenames = filenames + line;
                 }
                 txtLocalFileNames.setText(filenames);
+                fileNamesUpdate();
             } catch (FileNotFoundException e) {
                 JOptionPane.showMessageDialog(null, "File not found");
             } catch (IOException e) {

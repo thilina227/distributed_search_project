@@ -504,7 +504,7 @@
         </Container>
         <Component class="javax.swing.JButton" name="btnComments">
           <Properties>
-            <Property name="text" type="java.lang.String" value="forum"/>
+            <Property name="text" type="java.lang.String" value="Reviews"/>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
