@@ -6,7 +6,9 @@ import distributed.computing.domain.model.Operation;
 import distributed.computing.domain.model.PeerNode;
 import distributed.computing.messaging.PeerMessageUtils;
 import distributed.computing.messaging.broadcast.BroadCastMessenger;
+import distributed.computing.messaging.broadcast.CommentBroadCastUtil;
 import distributed.computing.messaging.broadcast.MessageCache;
+import distributed.computing.messaging.broadcast.message.MessageRequest;
 import distributed.computing.messaging.broadcast.message.SearchRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -84,6 +86,14 @@ public class MessageResolver {
                 return PeerMessageUtils.constructSearchResultAckResponse();
             }
             //TODO implement other operations
+
+            if (message.split(" ")[1].equalsIgnoreCase("CMNT")) {
+                LOGGER.debug("comment received");
+                MessageRequest request = new MessageRequest(message);
+                CommentBroadCastUtil commentBroadCastUtil = new CommentBroadCastUtil();
+                commentBroadCastUtil.handleReceivedComment(request);
+                return MessageUtils.prependLength("CMNTACK 0");
+            }
         }
 
         return PeerMessageUtils.constructErrorResponse();

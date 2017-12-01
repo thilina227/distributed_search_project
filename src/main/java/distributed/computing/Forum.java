@@ -7,7 +7,7 @@ package distributed.computing;
 
 import distributed.computing.config.NodeContext;
 import distributed.computing.domain.model.Comment;
-import distributed.computing.sevice.CommentRatingService;
+import distributed.computing.messaging.broadcast.CommentBroadCastUtil;
 import distributed.computing.sevice.CommentService;
 import distributed.computing.sevice.FileRatingService;
 import distributed.computing.util.Utils;
@@ -25,8 +25,7 @@ public class Forum extends javax.swing.JFrame {
 
     private FileRatingService fileRatingService = new FileRatingService();
     private CommentService commentService = new CommentService();
-    private CommentRatingService commentRatingService = new CommentRatingService();
-    
+    private CommentBroadCastUtil broadCastUtil = new CommentBroadCastUtil();
     private String fileName;
     
     /**
@@ -72,7 +71,6 @@ public class Forum extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
         groupfileRatings = new javax.swing.ButtonGroup();
         jLabel1 = new javax.swing.JLabel();
@@ -257,10 +255,11 @@ public class Forum extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel4)
-                    .addComponent(lblFileRating, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblFileRating, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1)
+                        .addComponent(jLabel4)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -281,6 +280,7 @@ public class Forum extends javax.swing.JFrame {
             commentService.saveComment(comment);
             
             JOptionPane.showMessageDialog(rootPane, "Comment submitted");
+            broadCastUtil.broadcastComment(comment);
             loadComments();
         }
     }//GEN-LAST:event_btnCmntSubmitActionPerformed

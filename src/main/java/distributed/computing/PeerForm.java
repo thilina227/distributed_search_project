@@ -772,7 +772,7 @@ public class PeerForm extends javax.swing.JFrame implements PeerNodeObserver{
     private javax.swing.JLabel peerName2;
     private static javax.swing.JList<String> resultList;
     private javax.swing.JButton searchButton;
-    private javax.swing.JSpinner spTtl;
+    public static javax.swing.JSpinner spTtl;
     private javax.swing.JTextArea txtLocalFileNames;
     private javax.swing.JTextField txtNodeIp;
     // End of variables declaration//GEN-END:variables
