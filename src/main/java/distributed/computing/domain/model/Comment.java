@@ -67,7 +67,7 @@ public class Comment {
                 ", fileHash='" + fileHash + '\'' +
                 ", node='" + node + '\'' +
                 ", comment='" + comment + '\'' +
-                ", time=" + time.getTime() +
+                ", time=" + time +
                 '}';
     }
 }

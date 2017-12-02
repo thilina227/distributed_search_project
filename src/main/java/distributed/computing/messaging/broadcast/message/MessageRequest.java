@@ -30,7 +30,7 @@ public class MessageRequest {
         this.hops = Integer.parseInt(chunks[3]);
         this.ttl = Integer.parseInt(chunks[4]);
         this.predecessor = chunks[5];
-        this.data = message.substring(message.indexOf(predecessor) + predecessor.length() + 2, message.length());
+        this.data = message.substring(message.indexOf(predecessor) + predecessor.length() + 1, message.length());
     }
 
     public String getId() {
