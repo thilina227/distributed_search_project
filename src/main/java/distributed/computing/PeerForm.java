@@ -20,12 +20,17 @@ import distributed.computing.util.PeerNodeObserver;
 import distributed.computing.util.SearchUtil;
 import distributed.computing.util.Utils;
 import java.awt.Color;
+import java.io.*;
 import javax.swing.JOptionPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
 import java.util.List;
+import javax.swing.DefaultListModel;
+import javax.swing.JFileChooser;
+import javax.swing.ListModel;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -36,6 +41,8 @@ public class PeerForm extends javax.swing.JFrame implements PeerNodeObserver{
     private static final Logger LOGGER = LogManager.getLogger(PeerForm.class.getName());
 
 
+    private static DefaultListModel resultListModel = new DefaultListModel<String>();
+    
     /**
      * Creates new form PeerForm
      */
@@ -55,6 +62,7 @@ public class PeerForm extends javax.swing.JFrame implements PeerNodeObserver{
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jFrame1 = new javax.swing.JFrame();
         jPanel1 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         NodeName = new javax.swing.JTextField();
@@ -68,15 +76,13 @@ public class PeerForm extends javax.swing.JFrame implements PeerNodeObserver{
         NodePort = new javax.swing.JTextField();
         applyButton = new javax.swing.JButton();
         bsRegButton = new javax.swing.JButton();
+        keyWord = new javax.swing.JTextField();
         lblStatus = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        keyWord = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         spTtl = new javax.swing.JSpinner();
         searchButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        resultArea = new javax.swing.JTextArea();
         jLabel8 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
@@ -84,15 +90,30 @@ public class PeerForm extends javax.swing.JFrame implements PeerNodeObserver{
         peerName1 = new javax.swing.JLabel();
         peerName2 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        resultList = new javax.swing.JList<>();
         jPanel4 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         txtLocalFileNames = new javax.swing.JTextArea();
+        addFileNamesBtn = new javax.swing.JButton();
+        btnComments = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         logTxtArea = new javax.swing.JTextArea();
+
+        javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
+        jFrame1.getContentPane().setLayout(jFrame1Layout);
+        jFrame1Layout.setHorizontalGroup(
+            jFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        jFrame1Layout.setVerticalGroup(
+            jFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Peer Properties");
@@ -132,6 +153,13 @@ public class PeerForm extends javax.swing.JFrame implements PeerNodeObserver{
             }
         });
 
+        keyWord.setEnabled(false);
+        keyWord.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                keyWordActionPerformed(evt);
+            }
+        });
+
         lblStatus.setBackground(new java.awt.Color(158, 158, 158));
         lblStatus.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
         lblStatus.setForeground(new java.awt.Color(101, 101, 101));
@@ -141,8 +169,6 @@ public class PeerForm extends javax.swing.JFrame implements PeerNodeObserver{
         lblStatus.setOpaque(true);
 
         jLabel7.setText("Key Word:");
-
-        keyWord.setEnabled(false);
 
         jLabel12.setText("TTL");
 
@@ -239,11 +265,6 @@ public class PeerForm extends javax.swing.JFrame implements PeerNodeObserver{
                 .addGap(1, 1, 1))
         );
 
-        resultArea.setEditable(false);
-        resultArea.setColumns(20);
-        resultArea.setRows(5);
-        jScrollPane1.setViewportView(resultArea);
-
         jLabel8.setText("Result:");
 
         jButton2.setText("Clear");
@@ -296,35 +317,13 @@ public class PeerForm extends javax.swing.JFrame implements PeerNodeObserver{
 
         jPanel3Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jLabel5, jLabel6, peerName1, peerName2});
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton2)
-                    .addComponent(jLabel8))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 419, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addComponent(jLabel8)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(jButton2))
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        resultList.setModel(resultListModel);
+        resultList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                resultListValueChanged(evt);
+            }
+        });
+        jScrollPane4.setViewportView(resultList);
 
         jLabel9.setText("File names");
 
@@ -338,12 +337,20 @@ public class PeerForm extends javax.swing.JFrame implements PeerNodeObserver{
         txtLocalFileNames.setEditable(false);
         txtLocalFileNames.setColumns(20);
         txtLocalFileNames.setRows(5);
+        txtLocalFileNames.setText("Adventures of Tintin\nJack and Jill\nGlee\nThe Vampire Diarie\nKing Arthur\nWindows XP\nHarry Potter\nKung Fu Panda\nLady Gaga\nTwilight\nWindows 8\nMission Impossible\nTurn Up The Music\nSuper Mario\nAmerican Pickers\nMicrosoft Office 2010\nHappy Feet\nModern Family\nAmerican Idol\nHacking for Dummies");
         txtLocalFileNames.addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
                 txtLocalFileNamesCaretUpdate(evt);
             }
         });
         jScrollPane2.setViewportView(txtLocalFileNames);
+
+        addFileNamesBtn.setText("Add File Names");
+        addFileNamesBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addFileNamesBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -355,9 +362,11 @@ public class PeerForm extends javax.swing.JFrame implements PeerNodeObserver{
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel9)
                         .addGap(18, 18, 18)
+                        .addComponent(addFileNamesBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane2))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 772, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -365,9 +374,56 @@ public class PeerForm extends javax.swing.JFrame implements PeerNodeObserver{
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addComponent(jLabel9))
+                    .addComponent(jLabel9)
+                    .addComponent(addFileNamesBtn))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        btnComments.setText("Comments");
+        btnComments.setEnabled(false);
+        btnComments.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCommentsActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton2)
+                    .addComponent(jLabel8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 381, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnComments, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(13, 13, 13)
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton2))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnComments))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -407,7 +463,6 @@ public class PeerForm extends javax.swing.JFrame implements PeerNodeObserver{
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -424,8 +479,6 @@ public class PeerForm extends javax.swing.JFrame implements PeerNodeObserver{
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -488,7 +541,7 @@ public class PeerForm extends javax.swing.JFrame implements PeerNodeObserver{
                     lblStatus.setText("ONLINE");
                     lblStatus.setForeground(Color.GREEN);
                     lblStatus.setBackground(new Color(91, 128, 92));
-                    
+                    fileNamesUpdate();
                 } else {
                     JOptionPane.showMessageDialog(rootPane, "Registration failed!, " + regResponse.getStatusMessage());
                 }
@@ -510,7 +563,6 @@ public class PeerForm extends javax.swing.JFrame implements PeerNodeObserver{
             
             keyWord.setEnabled(true);
             searchButton.setEnabled(true);
-            resultArea.setEnabled(true);
             txtLocalFileNames.setEnabled(true);
             txtLocalFileNames.setEditable(valid);
             NodeContext.setIp(txtNodeIp.getText());
@@ -565,8 +617,8 @@ public class PeerForm extends javax.swing.JFrame implements PeerNodeObserver{
     }//GEN-LAST:event_applyButtonActionPerformed
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
-        resultArea.setText("");
-        SearchUtil.search(keyWord.getText(), (int) spTtl.getValue());
+        resultListModel.clear();
+        SearchUtil.search(keyWord.getText(), (int) spTtl.getValue());        
     }//GEN-LAST:event_searchButtonActionPerformed
 
     private void txtLocalFileNamesCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txtLocalFileNamesCaretUpdate
@@ -580,18 +632,70 @@ public class PeerForm extends javax.swing.JFrame implements PeerNodeObserver{
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        resultArea.setText("");
+        resultListModel.clear();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void resultListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_resultListValueChanged
+ 
+        if (!resultList.isSelectionEmpty()) {
+            btnComments.setEnabled(true);
+        } else {
+            btnComments.setEnabled(false);
+        }
+        
+    }//GEN-LAST:event_resultListValueChanged
+
+    private void btnCommentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCommentsActionPerformed
+        if (!resultList.isSelectionEmpty()) {
+            String fileName = resultList.getSelectedValue();
+            fileName = fileName.substring(fileName.indexOf(":")+2, fileName.length());
+            fileName = fileName.trim();
+            new Forum(fileName).setVisible(true);
+        }
+    }//GEN-LAST:event_btnCommentsActionPerformed
+
+    private void addFileNamesBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFileNamesBtnActionPerformed
+        JFileChooser fileChooser = new JFileChooser();
+        FileFilter filter = new FileNameExtensionFilter("Tex files", "txt", "TXT");
+        fileChooser.setFileFilter(filter);
+        if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            txtLocalFileNames.setText(new String());            
+            File file = fileChooser.getSelectedFile();
+            String filenames = "";
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(file));
+                while(br.ready()){
+                    String line = br.readLine();
+                    if (!filenames.isEmpty()) {
+                        filenames = filenames + "\n";
+                    }
+                    filenames = filenames + line;
+                }
+                txtLocalFileNames.setText(filenames);
+                fileNamesUpdate();
+            } catch (FileNotFoundException e) {
+                JOptionPane.showMessageDialog(null, "File not found");
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(null, "Couldn't read file");
+            }
+
+        }        
+    }//GEN-LAST:event_addFileNamesBtnActionPerformed
+
+    private void keyWordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_keyWordActionPerformed
+        resultListModel.clear();
+        SearchUtil.search(keyWord.getText(), (int) spTtl.getValue());  
+    }//GEN-LAST:event_keyWordActionPerformed
    
     public static void addSearchResult(String fileName, String location) {
-        synchronized(resultArea) {
-            resultArea.setText(resultArea.getText() + location + " : " + fileName + "\n");
+        synchronized(resultListModel) {
+            resultListModel.addElement(location + " : " + fileName);
         }        
     }
     
     public static void clearSearchResult() {
-        synchronized(resultArea) {
-            resultArea.setText("");
+        synchronized(resultListModel) {
+            resultListModel.clear();
         }
     }
     
@@ -633,12 +737,15 @@ public class PeerForm extends javax.swing.JFrame implements PeerNodeObserver{
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField NodeName;
     private javax.swing.JTextField NodePort;
+    private javax.swing.JButton addFileNamesBtn;
     private javax.swing.JButton applyButton;
     private javax.swing.JTextField bsIP;
     private javax.swing.JTextField bsPort;
     private javax.swing.JButton bsRegButton;
+    private javax.swing.JButton btnComments;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JFrame jFrame1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -656,17 +763,17 @@ public class PeerForm extends javax.swing.JFrame implements PeerNodeObserver{
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTextField keyWord;
     private javax.swing.JLabel lblStatus;
     private javax.swing.JTextArea logTxtArea;
     private javax.swing.JLabel peerName1;
     private javax.swing.JLabel peerName2;
-    private static javax.swing.JTextArea resultArea;
+    private static javax.swing.JList<String> resultList;
     private javax.swing.JButton searchButton;
-    private javax.swing.JSpinner spTtl;
+    public static javax.swing.JSpinner spTtl;
     private javax.swing.JTextArea txtLocalFileNames;
     private javax.swing.JTextField txtNodeIp;
     // End of variables declaration//GEN-END:variables

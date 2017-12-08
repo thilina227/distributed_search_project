@@ -6,7 +6,9 @@ import distributed.computing.domain.model.Operation;
 import distributed.computing.domain.model.PeerNode;
 import distributed.computing.messaging.PeerMessageUtils;
 import distributed.computing.messaging.broadcast.BroadCastMessenger;
+import distributed.computing.messaging.broadcast.CommentBroadCastUtil;
 import distributed.computing.messaging.broadcast.MessageCache;
+import distributed.computing.messaging.broadcast.message.MessageRequest;
 import distributed.computing.messaging.broadcast.message.SearchRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,6 +22,7 @@ public class MessageResolver {
     private static final Logger LOGGER = LogManager.getLogger(MessageResolver.class.getName());
 
     private static final String PEER_MESSAGE_DELIMITER = " ";
+    private static CommentBroadCastUtil commentBroadCastUtil = new CommentBroadCastUtil();
 
     public static String resolvePeerMessage(String message) {
 
@@ -84,6 +87,27 @@ public class MessageResolver {
                 return PeerMessageUtils.constructSearchResultAckResponse();
             }
             //TODO implement other operations
+
+            if (message.split(" ")[1].equalsIgnoreCase("CMNT")) {
+                LOGGER.debug("comment received");
+                MessageRequest request = new MessageRequest(message);
+                commentBroadCastUtil.handleReceivedComment(request);
+                return MessageUtils.prependLength("CMNTACK 0");
+            }
+
+            if (message.split(" ")[1].equalsIgnoreCase("FILRTNG")) {
+                LOGGER.debug("file rating received");
+                MessageRequest request = new MessageRequest(message);
+                commentBroadCastUtil.handleReceivedFileRating(request);
+                return MessageUtils.prependLength("FILRTNGACK 0");
+            }
+
+            if (message.split(" ")[1].equalsIgnoreCase("CMNTRTNG")) {
+                LOGGER.debug("comment rating received");
+                MessageRequest request = new MessageRequest(message);
+                commentBroadCastUtil.handleReceivedCommentRating(request);
+                return MessageUtils.prependLength("CMNTRTNGACK 0");
+            }
         }
 
         return PeerMessageUtils.constructErrorResponse();

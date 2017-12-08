@@ -4,6 +4,7 @@ import distributed.computing.config.NodeContext;
 import distributed.computing.connector.HeartBeatDetector;
 import distributed.computing.listner.Listener;
 import distributed.computing.listner.UdpListener;
+import distributed.computing.util.DBConnection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,6 +21,7 @@ public class Main {
 
 
         new HeartBeatDetector().start();
+        DBConnection.createDatabase();
     }
 
     private static void startListeners() {

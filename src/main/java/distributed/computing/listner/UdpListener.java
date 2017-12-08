@@ -80,7 +80,7 @@ public class UdpListener extends Listener {
 
     @Override
     public String processMessage(String message) {
-        return MessageResolver.resolvePeerMessage(message);
+        return MessageResolver.resolvePeerMessage(message.trim());
     }
 
     /**

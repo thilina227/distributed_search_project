@@ -2,7 +2,9 @@ package distributed.computing.messaging.broadcast;
 
 import distributed.computing.config.NodeContext;
 import distributed.computing.connector.UdpCommunicator;
+import distributed.computing.domain.model.Comment;
 import distributed.computing.domain.model.PeerNode;
+import distributed.computing.messaging.broadcast.message.MessageRequest;
 import distributed.computing.messaging.broadcast.message.SearchRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -57,6 +59,48 @@ public class BroadCastMessenger {
                 }
             }
 
+        }
+    }
+
+    /**
+     * Broadcast message to network
+     *
+     * @param messageRequest broadcast message
+     * @return response
+     */
+    public void broadcast(MessageRequest messageRequest) {
+        String predecessorNode = messageRequest.getPredecessor().trim();
+        if (MessageCache.isInCache(messageRequest.getId())) {
+            //Do nothing
+            LOGGER.debug("Discarding message {}, already in cache", messageRequest.getId());
+        } else {
+            MessageCache.addCache(messageRequest.getId());
+            for (PeerNode parent : NodeContext.getParents()) {
+                //avoid sending back to predecessor
+                String parentNode = parent.getUsername().trim();
+                if (!parentNode.equals(predecessorNode)) {
+                    try {
+                        messageRequest.setPredecessor(NodeContext.getUserName());
+                        messageRequest.setHops(messageRequest.getHops() + 1);
+                        new UdpCommunicator().sendMessage(parent.getIp(), parent.getPort(), messageRequest.toString());
+                    } catch (IOException e) {
+                        LOGGER.error("Could not send message to parent {}", parent);
+                    }
+                }
+            }
+            for (PeerNode child : NodeContext.getChildren()) {
+                String childNode = child.getUsername().trim();
+                //avoid sending back to predecessor
+                if (!childNode.equalsIgnoreCase(predecessorNode)) {
+                    try {
+                        messageRequest.setHops(messageRequest.getHops() + 1);
+                        messageRequest.setPredecessor(NodeContext.getUserName());
+                        new UdpCommunicator().sendMessage(child.getIp(), child.getPort(), messageRequest.toString());
+                    } catch (IOException e) {
+                        LOGGER.error("Could not send message to child {}", child);
+                    }
+                }
+            }
         }
     }
 

@@ -1,8 +1,15 @@
 package distributed.computing;
 
+import distributed.computing.domain.model.Comment;
+import distributed.computing.sevice.CommentRatingService;
+import distributed.computing.sevice.CommentService;
+import distributed.computing.sevice.FileRatingService;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+
+import java.util.Date;
+import java.util.UUID;
 
 /**
  * Unit test for simple Main.
@@ -34,5 +41,16 @@ public class AppTest
     public void testApp()
     {
         assertTrue( true );
+    }
+
+
+    public static void main(String[] args) {
+        CommentRatingService commentService = new CommentRatingService();
+
+        commentService.saveCommentRating("123", "node1", 5);
+        commentService.saveCommentRating("123", "node2", 1);
+
+        System.out.println(commentService.getCommentRating("123")[0]);
+        System.out.println(commentService.getCommentRating("123")[1]);
     }
 }
